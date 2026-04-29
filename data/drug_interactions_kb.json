@@ -1,0 +1,302 @@
+[
+    {
+      "drugA": "阿司匹林",
+      "drugB": "布洛芬",
+      "severity": "high",
+      "description": "布洛芬可竞争性抑制阿司匹林对血小板的不可逆性抗栓作用，增加心血管事件风险，并增加胃肠道出血风险。"
+    },
+    {
+      "drugA": "阿司匹林",
+      "drugB": "华法林",
+      "severity": "high",
+      "description": "显著增加出血风险，需密切监测凝血功能（INR）。"
+    },
+    {
+      "drugA": "二甲双胍",
+      "drugB": "西咪替丁",
+      "severity": "medium",
+      "description": "西咪替丁可减少二甲双胍的肾脏排泄，导致二甲双胍血药浓度升高，增加乳酸酸中毒风险。"
+    },
+    {
+      "drugA": "氨氯地平",
+      "drugB": "辛伐他汀",
+      "severity": "medium",
+      "description": "氨氯地平可增加辛伐他汀的血药浓度，增加肌病/横纹肌溶解风险，辛伐他汀日剂量不应超过20mg。"
+    },
+    {
+      "drugA": "阿托伐他汀",
+      "drugB": "克拉霉素",
+      "severity": "high",
+      "description": "克拉霉素是CYP3A4强抑制剂，显著增加阿托伐他汀血药浓度，极易引发横纹肌溶解。"
+    },
+    {
+      "drugA": "阿托伐他汀",
+      "drugB": "柚子汁",
+      "severity": "medium",
+      "description": "葡萄柚汁抑制CYP3A4，可使阿托伐他汀吸收增加，增加副作用发生率。"
+    },
+    {
+      "drugA": "奥美拉唑",
+      "drugB": "氯吡格雷",
+      "severity": "high",
+      "description": "奥美拉唑竞争抑制CYP2C19，降低氯吡格雷转化为活性代谢物，减弱其抗血小板疗效。"
+    },
+    {
+      "drugA": "对乙酰氨基酚",
+      "drugB": "酒精",
+      "severity": "high",
+      "description": "长期饮酒或急性过量饮酒均会耗竭谷胱甘肽，极大增加对乙酰氨基酚导致的致命性肝损伤风险。"
+    },
+    {
+      "drugA": "银杏叶提取物",
+      "drugB": "阿司匹林",
+      "severity": "medium",
+      "description": "银杏提取物具有抑制血小板激活因子作用，与阿司匹林合用可能增加出血倾向。"
+    },
+    {
+      "drugA": "氢氯噻嗪",
+      "drugB": "地高辛",
+      "severity": "high",
+      "description": "氢氯噻嗪引起的低钾血症可增加心肌对地高辛的敏感性，容易诱发洋地黄中毒引起的致命性心律失常。"
+    },
+    {
+      "drugA": "缬沙坦",
+      "drugB": "螺内酯",
+      "severity": "high",
+      "description": "均为保钾作用药物，合用极易导致严重的高钾血症，有心脏停搏风险。"
+    },
+    {
+      "drugA": "硝酸甘油",
+      "drugB": "西地那非",
+      "severity": "high",
+      "description": "绝对禁忌。两者合用会导致严重的低血压甚至休克。"
+    },
+    {
+      "drugA": "美托洛尔",
+      "drugB": "维拉帕米",
+      "severity": "high",
+      "description": "联合使用会导致负性频率和负性传导作用叠加，可能引起严重的心动过缓和房室传导阻滞。"
+    },
+    {
+      "drugA": "卡马西平",
+      "drugB": "红霉素",
+      "severity": "high",
+      "description": "红霉素抑制卡马西平代谢，导致卡马西平浓度上升引起中毒反应（共济失调、复视等）。"
+    },
+    {
+      "drugA": "左旋多巴",
+      "drugB": "维生素B6",
+      "severity": "medium",
+      "description": "维生素B6在无脱羧酶抑制剂存在时，会加速左旋多巴在外周的破坏，降低其进入中枢的疗效。"
+    },
+    {
+      "drugA": "泼尼松",
+      "drugB": "布洛芬",
+      "severity": "high",
+      "description": "糖皮质激素和NSAIDs合用，成倍增加消化道溃疡和穿孔风险。"
+    },
+    {
+      "drugA": "阿卡波糖",
+      "drugB": "地塞米松",
+      "severity": "medium",
+      "description": "糖皮质激素具有升糖作用，可能减弱阿卡波糖的降糖疗效。"
+    },
+    {
+      "drugA": "拜糖平(阿卡波糖)",
+      "drugB": "活性炭",
+      "severity": "medium",
+      "description": "肠道吸附剂可能会降低α-糖苷酶抑制剂的疗效。"
+    },
+    {
+      "drugA": "甲氨蝶呤",
+      "drugB": "复方新诺明(磺胺类)",
+      "severity": "high",
+      "description": "竞争血浆蛋白增加甲氨蝶呤游离浓度，导致严重的骨髓抑制。"
+    },
+    {
+      "drugA": "铝碳酸镁",
+      "drugB": "左氧氟沙星",
+      "severity": "high",
+      "description": "抗酸剂中的金属离子与喹诺酮类抗生素发生络合反应，显著减少抗生素吸收，需至少间隔2小时服用。"
+    },
+    {
+      "drugA": "阿奇霉素",
+      "drugB": "胺碘酮",
+      "severity": "high",
+      "description": "均可能延长QT间期，合用增加尖端扭转型室速(TdP)风险。"
+    },
+    {
+      "drugA": "非布司他",
+      "drugB": "硫唑嘌呤",
+      "severity": "high",
+      "description": "非布司他抑制黄嘌呤氧化酶，使硫唑嘌呤代谢减慢，引起致命性的骨髓抑制。"
+    },
+    {
+      "drugA": "秋水仙碱",
+      "drugB": "克拉霉素",
+      "severity": "high",
+      "description": "克拉霉素可导致秋水仙碱浓度急剧增加，引起严重的中毒反应甚至死亡。"
+    },
+    {
+      "drugA": "舍曲林",
+      "drugB": "司来吉兰",
+      "severity": "high",
+      "description": "SSRI类抗抑郁药与MAOI合用易引起5-HT综合征（高热、震颤、神志不清），需间隔14天。"
+    },
+    {
+      "drugA": "格列本脲",
+      "drugB": "普萘洛尔",
+      "severity": "medium",
+      "description": "非选择性β受体阻滞剂可掩盖低血糖引起的心悸、出汗等交感神经兴奋症状，延误低血糖救治。"
+    },
+    {
+      "drugA": "扑尔敏(氯苯那敏)",
+      "drugB": "地西泮",
+      "severity": "medium",
+      "description": "中枢抑制作用叠加，导致过度镇静、嗜睡、跌倒风险增加。"
+    },
+    {
+      "drugA": "硝苯地平",
+      "drugB": "利福平",
+      "severity": "high",
+      "description": "利福平是强效肝药酶诱导剂，可显著降低硝苯地平血药浓度，导致降压失败。"
+    },
+    {
+      "drugA": "华法林",
+      "drugB": "人参",
+      "severity": "medium",
+      "description": "人参可能降低华法林的抗凝作用，机理不明，合用需增加INR监测频率。"
+    },
+    {
+      "drugA": "华法林",
+      "drugB": "丹参",
+      "severity": "medium",
+      "description": "丹参具有活血化瘀作用，与华法林合用显著增加出血风险。"
+    },
+    {
+      "drugA": "螺内酯",
+      "drugB": "氯化钾",
+      "severity": "high",
+      "description": "保钾利尿剂合用钾补充剂，增加严重高钾血症风险。"
+    },
+    {
+      "drugA": "左甲状腺素钠",
+      "drugB": "碳酸钙",
+      "severity": "high",
+      "description": "钙剂可延缓并减少左甲状腺素的吸收。两者服用须至少间隔2小时。"
+    },
+    {
+      "drugA": "左甲状腺素钠",
+      "drugB": "硫酸亚铁",
+      "severity": "high",
+      "description": "铁盐可减少甲状腺激素吸收，需至少间隔2小时。"
+    },
+    {
+      "drugA": "阿仑膦酸钠",
+      "drugB": "矿泉水",
+      "severity": "medium",
+      "description": "含高浓度矿物质的水会降低双膦酸盐的吸收，必须用纯水或白开水送服。"
+    },
+    {
+      "drugA": "西多福韦",
+      "drugB": "替诺福韦",
+      "severity": "high",
+      "description": "合用增加不可逆的肾毒性。"
+    },
+    {
+      "drugA": "甲氧氯普胺(胃复安)",
+      "drugB": "氯丙嗪",
+      "severity": "high",
+      "description": "同为多巴胺受体拮抗剂，合用增加锥体外系反应风险(震颤、肌张力障碍等)。"
+    },
+    {
+      "drugA": "塞来昔布",
+      "drugB": "卡托普利",
+      "severity": "medium",
+      "description": "NSAIDs可能减弱ACEI的降压效应，且可能对肾功能产生累加性的影响。"
+    },
+    {
+      "drugA": "蒙脱石散",
+      "drugB": "其他药物",
+      "severity": "medium",
+      "description": "蒙脱石散的高表面积可能吸附其他同时口服的药物，建议与其他药物间隔1-2小时服用。"
+    },
+    {
+      "drugA": "氟康唑",
+      "drugB": "格列吡嗪",
+      "severity": "medium",
+      "description": "氟康唑抑制磺脲类药物代谢，延长其半衰期，增加低血糖风险。"
+    },
+    {
+      "drugA": "地高辛",
+      "drugB": "胺碘酮",
+      "severity": "high",
+      "description": "胺碘酮可显著提高血清地高辛浓度（达70%-100%），引发洋地黄中毒。需将地高辛减量。"
+    },
+    {
+      "drugA": "替格瑞洛",
+      "drugB": "酮康唑",
+      "severity": "high",
+      "description": "强效CYP3A4抑制剂会显著增加替格瑞洛暴露量，增加出血风险。"
+    },
+    {
+      "drugA": "头孢哌酮",
+      "drugB": "酒精",
+      "severity": "high",
+      "description": "引起双硫仑样反应(面部潮红、头痛、心悸、呼吸困难)，用药期间及停药7天内禁酒。"
+    },
+    {
+      "drugA": "青霉素",
+      "drugB": "丙磺舒",
+      "severity": "low",
+      "description": "丙磺舒竞争性抑制青霉素从肾小管分泌，通常被用来增加青霉素血药浓度并延长作用时间(有益相互作用)。"
+    },
+    {
+      "drugA": "吗啡",
+      "drugB": "纳洛酮",
+      "severity": "low",
+      "description": "纳洛酮拮抗吗啡受体，用于阿片类药物过量中毒抢救(有益相互作用)。"
+    },
+    {
+      "drugA": "左氧氟沙星",
+      "drugB": "布洛芬",
+      "severity": "medium",
+      "description": "喹诺酮类药物与NSAIDs合用，可能增加中枢神经系统兴奋性和抽搐倾向。"
+    },
+    {
+      "drugA": "利伐沙班",
+      "drugB": "伊曲康唑",
+      "severity": "high",
+      "description": "伊曲康唑同时抑制CYP3A4和P-gp，显著增加利伐沙班的血药浓度，增加出血风险。"
+    },
+    {
+      "drugA": "达比加群",
+      "drugB": "利福平",
+      "severity": "high",
+      "description": "强效P-gp诱导剂显著降低达比加群浓度，失去抗血液凝固作用。"
+    },
+    {
+      "drugA": "西柚汁(葡萄柚)",
+      "drugB": "非洛地平",
+      "severity": "high",
+      "description": "显著增加药物生物利用度，导致严重的低血压反应。"
+    },
+    {
+      "drugA": "拉米夫定",
+      "drugB": "恩曲他滨",
+      "severity": "high",
+      "description": "作用机制相似的胞苷类似物向同一激酶竞争磷酸化竞争作用，疗效不但不增加反而可能有阻抗。"
+    },
+    {
+      "drugA": "氟尿嘧啶(5-FU)",
+      "drugB": "亚叶酸钙",
+      "severity": "low",
+      "description": "亚叶酸钙可增加5-FU对胸苷酸合成酶的抑制作用，是一种经典的增效配伍。"
+    },
+    {
+      "drugA": "丙戊酸钠",
+      "drugB": "美罗培南",
+      "severity": "high",
+      "description": "碳青霉烯类抗生素可使丙戊酸血药浓度迅速降低至治疗水平以下，导致癫痫破裂。"
+    }
+]

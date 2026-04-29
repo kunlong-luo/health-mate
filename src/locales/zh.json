@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "首页",
+    "family": "档案",
+    "history": "历程",
+    "settings": "设置",
+    "visits": "就诊",
+    "medications": "用药",
+    "notifications": "消息",
+    "logout": "登出",
+    "login": "登录"
+  },
+  "home": {
+    "title": "家庭化验单",
+    "subtitle": "解读大脑",
+    "desc": "拍下父母的化验单，快速看懂关键指标。不只是翻译，更是专属家庭医疗助理。",
+    "alerts": {
+      "title": "主动预警",
+      "desc": "系统会自动拦截并通知您双亲异常数据的变动，以及快到期的复诊或药品用完的时间。"
+    },
+    "annual": {
+      "title": "年度健康报告",
+      "desc": "查看 2025 年度家庭健康陪伴总结"
+    }
+  },
+  "upload": {
+    "title": "智能解读化验单",
+    "subtitle": "上传报告，AI 自动提取并分析指标",
+    "bindTo": "绑定至：{{name}}",
+    "interpreting": "正在进行深度解析",
+    "interpretingDesc": "请稍作等待，我们正在云端帮您重组报告数据格式",
+    "clickOrDrag": "点击或拖拽上传报告",
+    "addFamilyFirst": "先去添加家人档案",
+    "loginToStart": "登录开始使用",
+    "supportsText1": "支持清晰的相机截图、相册图片 (JPG/PNG)",
+    "supportsText2": "或标准的医院化验单 PDF 电子文件",
+    "security": "HIPAA 安全保护",
+    "calibration": "自动内容校准"
+  },
+  "settings": {
+    "title": "设置",
+    "account": "账户设置",
+    "notLoggedIn": "尚未登录",
+    "proMember": "Pro 会员",
+    "upgradePro": "升级 Pro",
+    "modelEngine": "模型引擎",
+    "localMode": "本地私有化",
+    "cloudMode": "混合云推理",
+    "provider": "大模型提供商",
+    "modelName": "指定模型版本",
+    "endpoint": "Base URL 接入点",
+    "apiKey": "API Key 或访问凭证",
+    "apiKeyPlaceholder": "留空则使用内置平台Key (推荐)",
+    "apiKeyDesc": "您的 API 密钥将在本地端进行强加密，若留空将默认使用平台内置分配额度。",
+    "testConnection": "测试连接",
+    "testing": "测试中...",
+    "saveConfig": "保存引擎配置",
+    "saving": "保存中...",
+    "logout": "退出账号登录",
+    "language": "Language / 语言",
+    "systemDefault": "系统默认额度"
+  }
+}

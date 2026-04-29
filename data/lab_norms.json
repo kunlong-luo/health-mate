@@ -1,0 +1,542 @@
+[
+  {
+    "id": "WBC",
+    "name_cn": "白细胞计数",
+    "name_en": "White Blood Cell",
+    "abbr": "WBC",
+    "range": "3.5-9.5",
+    "unit": "10^9/L",
+    "high_meaning": ["细菌感染", "应激反应", "白血病", "使用糖皮质激素"],
+    "low_meaning": ["病毒感染", "自身免疫性疾病", "放化疗后", "血液病"],
+    "severity_rules": {
+      "mild": {"high": 12, "low": 3},
+      "moderate": {"high": 20, "low": 2},
+      "severe": {"high": 50, "low": 1}
+    },
+    "explanation_style": "白细胞就像是身体里的'保安'，偏高多半是近期有炎症或感染，身体在调兵遣将打仗；偏低则说明抵抗力可能有下降，最近要特别注意别感冒了。",
+    "related_indicators": ["NEUT%", "LYM%", "CRP"],
+    "recommended_dept": ["发热门诊", "内科", "血液科"]
+  },
+  {
+    "id": "RBC",
+    "name_cn": "红细胞计数",
+    "name_en": "Red Blood Cell",
+    "abbr": "RBC",
+    "range": "男性:4.3-5.8 女性:3.8-5.1",
+    "unit": "10^12/L",
+    "high_meaning": ["高原居住", "长期吸烟", "慢性肺病", "真性红细胞增多症"],
+    "low_meaning": ["各种贫血", "失血", "营养不良(铁/B12缺乏)"],
+    "severity_rules": {
+      "mild": {"low": 3.0},
+      "moderate": {"low": 2.5},
+      "severe": {"low": 1.5}
+    },
+    "explanation_style": "红细胞负责给全身送氧气。稍微低一点就是贫血，可能会觉得没力气、头晕；偏高的话血液可能比较黏稠，如果是抽烟引起的建议少抽点。",
+    "related_indicators": ["HGB", "HCT", "MCV"],
+    "recommended_dept": ["血液科", "营养科"]
+  },
+  {
+    "id": "HGB",
+    "name_cn": "血红蛋白",
+    "name_en": "Hemoglobin",
+    "abbr": "HGB",
+    "range": "男性:130-175 女性:115-150",
+    "unit": "g/L",
+    "high_meaning": ["脱水", "缺氧性疾病(慢阻肺)", "红细胞增多症"],
+    "low_meaning": ["缺铁性贫血", "巨幼细胞性贫血", "慢性失血", "消化道渗血"],
+    "severity_rules": {
+      "mild": {"low": 90},
+      "moderate": {"low": 60},
+      "severe": {"low": 0}
+    },
+    "explanation_style": "血红蛋白是判断贫血最关键的指标。这个值低了才是真贫血，日常要注意多吃点红肉、肝脏补补铁；特别低的话需要找医生开点补铁药了。",
+    "related_indicators": ["RBC", "铁蛋白", "MCV"],
+    "recommended_dept": ["血液科", "消化内科"]
+  },
+  {
+    "id": "PLT",
+    "name_cn": "血小板计数",
+    "name_en": "Platelet",
+    "abbr": "PLT",
+    "range": "125-350",
+    "unit": "10^9/L",
+    "high_meaning": ["反应性增多(感染/出血)", "原发性血小板增多症", "脾切除后"],
+    "low_meaning": ["血小板减少性紫癜(ITP)", "肝硬化脾功能亢进", "化疗后"],
+    "severity_rules": {
+      "mild": {"high": 450, "low": 80},
+      "moderate": {"high": 600, "low": 30},
+      "severe": {"high": 1000, "low": 20}
+    },
+    "explanation_style": "血小板就像身体的'创可贴'，负责止血的。偏低的话要小心磕碰容易青一块紫一块；要是特别高，会有血栓的风险，平时要多喝水。",
+    "related_indicators": ["MPV", "凝血功能"],
+    "recommended_dept": ["血液科"]
+  },
+  {
+    "id": "NEUT%",
+    "name_cn": "中性粒细胞百分比",
+    "name_en": "Neutrophil Percentage",
+    "abbr": "NEUT%",
+    "range": "40.0-75.0",
+    "unit": "%",
+    "high_meaning": ["细菌感染", "应激状态或外伤", "严重组织损伤"],
+    "low_meaning": ["病毒感染", "药物损伤", "自身免疫性疾病"],
+    "severity_rules": {
+      "mild": {"high": 85, "low": 30},
+      "moderate": {"high": 90, "low": 15},
+      "severe": {"high": 95, "low": 5}
+    },
+    "explanation_style": "中性粒细胞专门打细菌。偏高通常意味着身体某处有细菌感染发炎了（比如嗓子发炎）；偏低一般是碰到了病毒感染，或者吃某些药的影响。",
+    "related_indicators": ["WBC", "CRP"],
+    "recommended_dept": ["内科", "急诊科"]
+  },
+  {
+    "id": "LYM%",
+    "name_cn": "淋巴细胞百分比",
+    "name_en": "Lymphocyte Percentage",
+    "abbr": "LYM%",
+    "range": "20.0-50.0",
+    "unit": "%",
+    "high_meaning": ["病毒感染(如感冒、恢复期)", "某些血液病"],
+    "low_meaning": ["免疫缺陷", "应激状态", "使用激素类药物"],
+    "severity_rules": {
+      "mild": {"high": 60, "low": 10},
+      "moderate": {"high": 80, "low": 5},
+      "severe": {"high": 90, "low": 0}
+    },
+    "explanation_style": "淋巴细胞主要对付病毒。如果升高，可能最近感冒了或者正在感冒恢复期；如果偏低，可能是最近身体太累、压力大导致免疫力差了一点。",
+    "related_indicators": ["WBC", "NEUT%"],
+    "recommended_dept": ["内科"]
+  },
+  {
+    "id": "ALT",
+    "name_cn": "谷丙转氨酶",
+    "name_en": "Alanine Aminotransferase",
+    "abbr": "ALT",
+    "range": "7-40",
+    "unit": "U/L",
+    "high_meaning": ["脂肪肝", "酒精性肝损伤", "病毒性肝炎", "吃药伤肝(比如某些感冒药、中药)", "熬夜疲劳"],
+    "low_meaning": ["无临床特殊意义，偏低正常"],
+    "severity_rules": {
+      "mild": {"high": 80},
+      "moderate": {"high": 200},
+      "severe": {"high": 400}
+    },
+    "explanation_style": "转氨酶是肝脏健康的'晴雨表'。稍微偏高（比如七八十）可能是最近太累没睡好，或者有点脂肪肝；如果是轻度偏高，别太担心，多休息少喝酒，复查看看就行。",
+    "related_indicators": ["AST", "GGT", "TBIL", "腹部彩超"],
+    "recommended_dept": ["消化内科", "肝病科"]
+  },
+  {
+    "id": "AST",
+    "name_cn": "谷草转氨酶",
+    "name_en": "Aspartate Aminotransferase",
+    "abbr": "AST",
+    "range": "13-35",
+    "unit": "U/L",
+    "high_meaning": ["肝细胞严重坏死", "心肌炎/心肌梗死", "骨骼肌损伤", "酒精性肝病"],
+    "low_meaning": ["无临床意义"],
+    "severity_rules": {
+      "mild": {"high": 70},
+      "moderate": {"high": 150},
+      "severe": {"high": 300}
+    },
+    "explanation_style": "这个指标和ALT经常一块儿看。如果只有它自己偏高，可能是最近运动太猛肌肉酸痛了；如果和ALT一起高，说明肝脏确实有点受损，需要养肝了。",
+    "related_indicators": ["ALT", "CK", "LDH"],
+    "recommended_dept": ["消化内科", "心内科"]
+  },
+  {
+    "id": "GGT",
+    "name_cn": "谷氨酰转移酶",
+    "name_en": "Gamma-Glutamyl Transferase",
+    "abbr": "GGT",
+    "range": "7-45",
+    "unit": "U/L",
+    "high_meaning": ["长期饮酒(非常敏感)", "胆道梗阻/胆结石", "脂肪肝", "药物性肝损伤"],
+    "low_meaning": ["一般正常"],
+    "severity_rules": {
+      "mild": {"high": 90},
+      "moderate": {"high": 200},
+      "severe": {"high": 400}
+    },
+    "explanation_style": "这被称为'酒精肝指标'。如果这个指标偏高，大多数情况都是因为喝酒造成的；如果您不怎么喝酒也高，可能是结石影响了胆管，或者脂肪肝的信号。",
+    "related_indicators": ["ALP", "TBIL", "腹部彩超"],
+    "recommended_dept": ["消化内科", "肝胆外科"]
+  },
+  {
+    "id": "TBIL",
+    "name_cn": "总胆红素",
+    "name_en": "Total Bilirubin",
+    "abbr": "TBIL",
+    "range": "3.4-20.5",
+    "unit": "μmol/L",
+    "high_meaning": ["黄疸", "胆结石阻塞", "肝硬化", "溶血性贫血", "吉尔伯特综合征(良性先天)"],
+    "low_meaning": ["无临床意义"],
+    "severity_rules": {
+      "mild": {"high": 34.2},
+      "moderate": {"high": 85.5},
+      "severe": {"high": 171}
+    },
+    "explanation_style": "它能反映肝脏代谢和胆汁排泄。如果只有轻微偏高（二三十左右），而且没觉得哪里不舒服，可能只是先天体质原因，不需要吃药；如果一直升高，可能眼睛皮肤会变黄，需要去医院详细查。",
+    "related_indicators": ["DBIL", "IBIL", "ALT"],
+    "recommended_dept": ["消化内科", "肝胆外科"]
+  },
+  {
+    "id": "ALB",
+    "name_cn": "白蛋白",
+    "name_en": "Albumin",
+    "abbr": "ALB",
+    "range": "40-55",
+    "unit": "g/L",
+    "high_meaning": ["严重脱水(血液浓缩)"],
+    "low_meaning": ["营养不良", "肝脏合成功能衰退(如肝硬化)", "肾病综合征漏出", "慢性消耗性疾病"],
+    "severity_rules": {
+      "mild": {"low": 35},
+      "moderate": {"low": 30},
+      "severe": {"low": 25}
+    },
+    "explanation_style": "白蛋白就像是人体血管里的'海绵'和'营养库'。偏少说明身体底子虚了，可能是最近吃得不够好肉蛋奶补充少，也可能是肝脏没劲儿制造不了了。低了容易导致身体水肿胀气。",
+    "related_indicators": ["TP", "尿蛋白", "肝胆脾超声"],
+    "recommended_dept": ["消化内科", "肾内科", "营养科"]
+  },
+  {
+    "id": "BUN",
+    "name_cn": "尿素氮",
+    "name_en": "Blood Urea Nitrogen",
+    "abbr": "BUN",
+    "range": "2.9-8.2",
+    "unit": "mmol/L",
+    "high_meaning": ["肾功能受损", "近期吃太多高蛋白食物(肉类)", "消化道出血", "脱水少尿"],
+    "low_meaning": ["蛋白质摄入不足", "肝功能严重衰竭"],
+    "severity_rules": {
+      "mild": {"high": 10},
+      "moderate": {"high": 20},
+      "severe": {"high": 35}
+    },
+    "explanation_style": "这是肾脏是不是在好好工作的一个检测站。如果仅仅稍微高了一点点，回忆下是不是前两天大鱼大肉没少吃？如果高得比较多，提示肾脏排毒可能有点压力了。",
+    "related_indicators": ["CRE", "UA", "微量白蛋白/肌酐比值"],
+    "recommended_dept": ["肾内科"]
+  },
+  {
+    "id": "CRE",
+    "name_cn": "血清肌酐",
+    "name_en": "Creatinine",
+    "abbr": "CRE",
+    "range": "男性:53-106 女性:44-97",
+    "unit": "μmol/L",
+    "high_meaning": ["各种原因急慢性肾病导致肾功能减退", "泌尿系统梗阻", "短期大量吃肉/肌肉发达也有影响"],
+    "low_meaning": ["肌肉萎缩", "老年人本身肌肉量少", "极度营养不良"],
+    "severity_rules": {
+      "mild": {"high": 133},
+      "moderate": {"high": 442},
+      "severe": {"high": 707}
+    },
+    "explanation_style": "肌酐可是判断肾脏好坏最重要的金指标之一！它一旦明确超标，哪怕只是高了一点点，也说明肾脏的过滤网可能出问题了，千万别掉以轻心，拿这个一定要去找肾内科医生看看。",
+    "related_indicators": ["BUN", "尿常规", "eGFR"],
+    "recommended_dept": ["肾内科"]
+  },
+  {
+    "id": "UA",
+    "name_cn": "尿酸",
+    "name_en": "Uric Acid",
+    "abbr": "UA",
+    "range": "男性:208-416 女性:149-358",
+    "unit": "μmol/L",
+    "high_meaning": ["高尿酸血症", "痛风", "进食过多海鲜、内脏、饮用啤酒", "高血压肾损伤"],
+    "low_meaning": ["遗传性酶缺乏", "严重肝损害"],
+    "severity_rules": {
+      "mild": {"high": 480},
+      "moderate": {"high": 600},
+      "severe": {"high": 700}
+    },
+    "explanation_style": "尿酸高现在太常见啦，是著名的'第四高'。超过正常值不多时可能没感觉，但是特别高的话容易在关节里长结晶引起痛风（大脚趾痛）。提醒您平时多喝白开水，酒和海鲜内脏尽量少碰。",
+    "related_indicators": ["BUN", "CRE", "血脂"],
+    "recommended_dept": ["内分泌科", "风湿免疫科"]
+  },
+  {
+    "id": "eGFR",
+    "name_cn": "估算肾小球滤过率",
+    "name_en": "Estimated Glomerular Filtration Rate",
+    "abbr": "eGFR",
+    "range": "≥90",
+    "unit": "mL/min",
+    "high_meaning": ["早期糖尿病肾病代偿期(高滤过状态)"],
+    "low_meaning": ["急慢性肾功能衰竭", "随着年龄增长自然衰退"],
+    "severity_rules": {
+      "mild": {"low": 60},
+      "moderate": {"low": 30},
+      "severe": {"low": 15}
+    },
+    "explanation_style": "这个数字就是肾脏过滤垃圾的'排水速度'。超过90是非常棒的。如果是60到90之间，中老年人有轻微下降也能接受；一旦低于60，代表肾脏罢工了较多，需要医药帮助维护了。",
+    "related_indicators": ["CRE", "BUN", "尿微量白蛋白"],
+    "recommended_dept": ["肾内科"]
+  },
+  {
+    "id": "TC",
+    "name_cn": "总胆固醇",
+    "name_en": "Total Cholesterol",
+    "abbr": "TC",
+    "range": "3.1-5.17",
+    "unit": "mmol/L",
+    "high_meaning": ["高胆固醇血症", "动脉粥样硬化风险增加", "甲状腺功能减退", "糖尿病"],
+    "low_meaning": ["营养不良", "严重肝病", "甲亢"],
+    "severity_rules": {
+      "mild": {"high": 6.2},
+      "moderate": {"high": 7.8},
+      "severe": {"high": 9.0}
+    },
+    "explanation_style": "整体说明血液里的'油脂'总量。偏高的话容易在血管壁上挂油，让血管变硬变窄。咱们该把肥肉、油炸的减量，晚饭也别吃太饱太多了。",
+    "related_indicators": ["TG", "HDL-C", "LDL-C"],
+    "recommended_dept": ["心内科", "内分泌科"]
+  },
+  {
+    "id": "TG",
+    "name_cn": "甘油三酯",
+    "name_en": "Triglycerides",
+    "abbr": "TG",
+    "range": "0.56-1.70",
+    "unit": "mmol/L",
+    "high_meaning": ["饮食(近期高脂高糖饮食最为影响)", "肥胖", "饮酒", "糖尿病微血管病变"],
+    "low_meaning": ["甲亢", "吸收不良"],
+    "severity_rules": {
+      "mild": {"high": 2.26},
+      "moderate": {"high": 5.65},
+      "severe": {"high": 11.3}
+    },
+    "explanation_style": "这个指标对'管住嘴、迈开腿'最敏感！前几天要是连着大鱼大肉喝酒了，它瞬间就会往上窜。只要高出正常值，就是提醒我们要控制主食（米面积分、甜食）和增加运动量啦。如果高得离谱要小心急性胰腺炎。",
+    "related_indicators": ["TC", "VLDL", "血糖"],
+    "recommended_dept": ["内分泌科", "心内科"]
+  },
+  {
+    "id": "HDL-C",
+    "name_cn": "高密度脂蛋白胆固醇",
+    "name_en": "High-Density Lipoprotein",
+    "abbr": "HDL-C",
+    "range": "1.04-1.55",
+    "unit": "mmol/L",
+    "high_meaning": ["好事，长寿标志", "规律大运动量锻炼的人群较高"],
+    "low_meaning": ["动脉硬化风险高", "肥胖", "吸烟", "糖尿病体质"],
+    "severity_rules": {
+      "mild": {"low": 1.0},
+      "moderate": {"low": 0.8},
+      "severe": {"low": 0.5}
+    },
+    "explanation_style": "大家叫它'血管清道夫'或者'好胆固醇'，这个指标是罕见的高了比低了好的化验！如果偏低，说明血管的清洁能力不足了，多吃些坚果、深海鱼或者快走运动能帮它涨上来。",
+    "related_indicators": ["LDL-C", "TG"],
+    "recommended_dept": ["心内科", "全科"]
+  },
+  {
+    "id": "LDL-C",
+    "name_cn": "低密度脂蛋白胆固醇",
+    "name_en": "Low-Density Lipoprotein",
+    "abbr": "LDL-C",
+    "range": "1.8-3.4",
+    "unit": "mmol/L",
+    "high_meaning": ["极易导致斑块和冠心病", "心梗脑梗的第一大元凶", "家族遗传性高胆固醇"],
+    "low_meaning": ["服用降脂药效果良好", "极度营养极差"],
+    "severity_rules": {
+      "mild": {"high": 4.14},
+      "moderate": {"high": 4.9},
+      "severe": {"high": 6.2}
+    },
+    "explanation_style": "这是大名鼎鼎的'坏胆固醇'，它是造成血管堵塞长斑块的心梗脑梗核心凶手！如果超过自然值尤其是过了4.1，多数情况医生会建议吃他汀类的降脂药来管束它。",
+    "related_indicators": ["TC", "颈动脉超声", "心电图"],
+    "recommended_dept": ["心内科", "神经内科"]
+  },
+  {
+    "id": "GLU",
+    "name_cn": "空腹血糖",
+    "name_en": "Fasting Glucose",
+    "abbr": "GLU",
+    "range": "3.9-6.1",
+    "unit": "mmol/L",
+    "high_meaning": ["糖尿病可能大于7.0", "空腹血糖受损6.1-7.0", "应激性高血糖", "胰腺病变"],
+    "low_meaning": ["低血糖", "饥饿", "降糖药或胰岛素过量"],
+    "severity_rules": {
+      "mild": {"high": 7.0, "low": 3.9},
+      "moderate": {"high": 11.1, "low": 2.8},
+      "severe": {"high": 16.7, "low": 2.2}
+    },
+    "explanation_style": "如果超过了6.1但不到7.0，是属于糖尿病前期亮起的黄灯，还没确诊，但得马上开始戒甜点粗粮了；如果是7.0以上，可能就要被戴上糖尿病的帽子了。若是低于3.9，会有头晕心慌出冷汗的低血糖情况，要赶紧吃糖。",
+    "related_indicators": ["HbA1c", "胰岛素释放", "尿糖"],
+    "recommended_dept": ["内分泌科"]
+  },
+  {
+    "id": "HbA1c",
+    "name_cn": "糖化血红蛋白",
+    "name_en": "Glycosylated Hemoglobin",
+    "abbr": "HbA1c",
+    "range": "4.0-6.0",
+    "unit": "%",
+    "high_meaning": ["近2-3个月平均血糖偏高", "糖尿病未控制良好"],
+    "low_meaning": ["红细胞寿命缩短型疾病", "近期有出血"],
+    "severity_rules": {
+      "mild": {"high": 6.5},
+      "moderate": {"high": 8.0},
+      "severe": {"high": 10.0}
+    },
+    "explanation_style": "普通的血糖就像'抓拍'，而糖化它像个'录像机'，反映了您最近三个月的平均真实血糖！这才是检验控糖成果的终极裁判。超过6.5%很大可能就是糖尿病或者控制得不佳了。",
+    "related_indicators": ["GLU", "空腹胰岛素"],
+    "recommended_dept": ["内分泌科"]
+  },
+  {
+    "id": "TSH",
+    "name_cn": "促甲状腺激素",
+    "name_en": "TSH",
+    "abbr": "TSH",
+    "range": "0.35-4.94",
+    "unit": "uIU/mL",
+    "high_meaning": ["甲状腺功能减退(最敏感指标)", "桥本甲状腺炎后期"],
+    "low_meaning": ["甲状腺功能亢进(甲亢)", "亚急性甲状腺炎早期"],
+    "severity_rules": {
+      "mild": {"high": 10, "low": 0.1},
+      "moderate": {"high": 20, "low": 0.05},
+      "severe": {"high": 50, "low": 0.01}
+    },
+    "explanation_style": "这是控制大脖子(甲状腺)的总司令。它和甲状腺是相反的跷跷板：它高了，说明甲状腺干活慢了（甲减），人会觉得怕冷没精神；它如果是非常低，说明甲状腺干活太疯狂（甲亢），人会心慌怕热多汗。",
+    "related_indicators": ["FT3", "FT4", "TPOAb", "甲状腺超声"],
+    "recommended_dept": ["内分泌科", "甲状腺外科"]
+  },
+  {
+    "id": "FT3",
+    "name_cn": "游离三碘甲状腺原氨酸",
+    "name_en": "Free T3",
+    "abbr": "FT3",
+    "range": "3.10-6.80",
+    "unit": "pmol/L",
+    "high_meaning": ["甲亢明确指证"],
+    "low_meaning": ["甲减", "重病带来的低T3综合征"],
+    "severity_rules": {
+      "mild": {"high": 8.5, "low": 2.5},
+      "moderate": {"high": 15, "low": 1.5},
+      "severe": {"high": 30, "low": 0.5}
+    },
+    "explanation_style": "甲状腺分泌出的具有活性的激素之一。配合TSH看最准，偏高的话基础代谢过快身体消耗大；偏低说明身体没通电，容易乏力便秘发胖。",
+    "related_indicators": ["TSH", "FT4"],
+    "recommended_dept": ["内分泌科"]
+  },
+  {
+    "id": "FT4",
+    "name_cn": "游离甲状腺素",
+    "name_en": "Free T4",
+    "abbr": "FT4",
+    "range": "12.0-22.0",
+    "unit": "pmol/L",
+    "high_meaning": ["甲亢明确指证", "用药过量(优甲乐偏大)"],
+    "low_meaning": ["甲状腺功能减退"],
+    "severity_rules": {
+      "mild": {"high": 30, "low": 9},
+      "moderate": {"high": 50, "low": 5},
+      "severe": {"high": 80, "low": 2}
+    },
+    "explanation_style": "如果您在吃优甲乐一类的药补充甲状腺功能，FT4偏高了就提示吃得有一点点多，得去找医生调减药量；偏低的话就说明药量还不够。",
+    "related_indicators": ["TSH", "FT3"],
+    "recommended_dept": ["内分泌科"]
+  },
+  {
+    "id": "CK",
+    "name_cn": "肌酸激酶",
+    "name_en": "Creatine Kinase",
+    "abbr": "CK",
+    "range": "50-310",
+    "unit": "U/L",
+    "high_meaning": ["心肌梗死", "肌肉注射外伤", "剧烈强体力运动后", "服用他汀类降脂药肌损伤"],
+    "low_meaning": ["长期卧床缺乏运动", "甲亢"],
+    "severity_rules": {
+      "mild": {"high": 500},
+      "moderate": {"high": 1000},
+      "severe": {"high": 5000}
+    },
+    "explanation_style": "这个酶主要在心肌和骨骼肌里面。如果这两天干力气活了或者跑步跑过头了，它就容易高；但如果没剧烈运动它还飞高，胸口又不痛的话，要注意是不是最近吃的降脂药伤到肌肉了。",
+    "related_indicators": ["CK-MB", "AST", "肌钙蛋白"],
+    "recommended_dept": ["心内科", "神经内科"]
+  },
+  {
+    "id": "CK-MB",
+    "name_cn": "肌酸激酶同工酶",
+    "name_en": "CK-MB",
+    "abbr": "CK-MB",
+    "range": "0-24",
+    "unit": "U/L",
+    "high_meaning": ["急性心肌梗死的核心早期指标", "心肌炎"],
+    "low_meaning": ["无临床意义"],
+    "severity_rules": {
+      "mild": {"high": 40},
+      "moderate": {"high": 100},
+      "severe": {"high": 200}
+    },
+    "explanation_style": "这是心肌遭受伤害时的关键报警器！如果不巧偏高了，一定不能大意，尤其是如果有胸闷胸痛的症状，千万不要拖延，立即去急诊做进一步心电图排查。",
+    "related_indicators": ["肌钙蛋白", "心电图", "CK"],
+    "recommended_dept": ["心内科急诊"]
+  },
+  {
+    "id": "LDH",
+    "name_cn": "乳酸脱氢酶",
+    "name_en": "Lactate Dehydrogenase",
+    "abbr": "LDH",
+    "range": "120-250",
+    "unit": "U/L",
+    "high_meaning": ["心肌梗死", "肝脏疾病", "肺梗死", "恶性肿瘤组织坏死", "巨幼细胞贫血"],
+    "low_meaning": ["无特殊意义"],
+    "severity_rules": {
+      "mild": {"high": 400},
+      "moderate": {"high": 1000},
+      "severe": {"high": 2000}
+    },
+    "explanation_style": "由于不仅存在于肝也是心肌和其它内脏常见的成分，它算是体内发炎损伤的'大杂烩'型帮手。轻微偏高往往提示有点炎症疲劳，单独这一项轻微高的话暂时不用过分紧张。",
+    "related_indicators": ["AST", "ALT", "CK"],
+    "recommended_dept": ["内科"]
+  },
+  {
+    "id": "CRP",
+    "name_cn": "C反应蛋白",
+    "name_en": "C-Reactive Protein",
+    "abbr": "CRP",
+    "range": "0-10",
+    "unit": "mg/L",
+    "high_meaning": ["细菌感染急性期炎症(非常敏感)", "风湿/免疫性疾病活动期", "大手术后反应"],
+    "low_meaning": ["无意义"],
+    "severity_rules": {
+      "mild": {"high": 20},
+      "moderate": {"high": 50},
+      "severe": {"high": 100}
+    },
+    "explanation_style": "它对身体发炎无比敏锐！只要是高了必定说明体内有实打实的急性炎症了（大概率是细菌惹的祸），数值越高火烧得越旺。通常医生会结合白细胞结果，可能给配点好的消炎药或者抗生素压压火。",
+    "related_indicators": ["WBC", "红细胞沉降率(血沉)"],
+    "recommended_dept": ["感染科", "发热门诊"]
+  },
+  {
+    "id": "CEA",
+    "name_cn": "癌胚抗原",
+    "name_en": "Carcinoembryonic Antigen",
+    "abbr": "CEA",
+    "range": "0-5",
+    "unit": "ng/mL",
+    "high_meaning": ["部分腺癌如结直肠癌、胃癌、肺癌等明显上升", "慢性炎症(溃疡性结肠炎、胰腺炎)", "长期抽烟者本就偏高"],
+    "low_meaning": ["无意义"],
+    "severity_rules": {
+      "mild": {"high": 10},
+      "moderate": {"high": 20},
+      "severe": {"high": 50}
+    },
+    "explanation_style": "它是个有名的肿瘤标志物，但并不是'偏高就是得癌'。平时抽烟多、有胃肠炎症的人也会轻度偏高。若数值超过正常值两三倍以上并一路上涨的话就需要当心了，建议去做个胃肠镜或者肺部CT筛查一下求个安心。",
+    "related_indicators": ["AFP", "胃肠镜检查"],
+    "recommended_dept": ["消化内科", "肿瘤科"]
+  },
+  {
+    "id": "AFP",
+    "name_cn": "甲胎蛋白",
+    "name_en": "Alpha-Fetoprotein",
+    "abbr": "AFP",
+    "range": "0-7",
+    "unit": "ng/mL",
+    "high_meaning": ["原发性肝癌的特异性指标", "妊娠期妇女(正常生理升高)", "活动性肝炎/肝硬化"],
+    "low_meaning": ["无意义"],
+    "severity_rules": {
+      "mild": {"high": 20},
+      "moderate": {"high": 200},
+      "severe": {"high": 400}
+    },
+    "explanation_style": "这是专门盯原发肝癌的'侦察兵'。普通人稍有升高如果是患有乙肝之类肝脏处于发炎修复阶段也会有；不过如果高出十分多，特别是长期乙肝肝硬化人士，必须立马去做肝脏增强核磁共振或者CT看是否有异常组织生成。",
+    "related_indicators": ["CEA", "肝功能组合", "腹部增强CT/核磁"],
+    "recommended_dept": ["肝病科", "肿瘤外科"]
+  }
+]

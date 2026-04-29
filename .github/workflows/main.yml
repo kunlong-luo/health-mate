@@ -1,0 +1,54 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.x
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Check types
+      run: npx tsc --noEmit
+      
+    - name: Build frontend & backend
+      run: npm run build
+      
+    # Here you would add tests:
+    # - name: Run unit tests
+    #   run: npm test
+
+  deploy:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    # In a real environment, you would use ssh-action or similar to deploy the new build
+    # or build and push a Docker image to a registry.
+    - name: Build and Push Docker Image
+      run: |
+        echo "Mocking Docker Build & Push"
+        # docker build -t myregistry.com/healthmate:latest .
+        # docker push myregistry.com/healthmate:latest
+        
+    - name: Trigger Server Deployment
+      run: |
+        echo "Mocking Server Restart"
+        # ssh user@server "cd /app && docker-compose pull && docker-compose up -d"

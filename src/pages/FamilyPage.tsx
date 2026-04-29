@@ -1,0 +1,142 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'sonner';
+import { Users, Plus, UserCircle, ChevronRight } from 'lucide-react';
+
+export default function FamilyPage() {
+  const { token } = useAuth();
+  const navigate = useNavigate();
+  const [members, setMembers] = useState<any[]>([]);
+  const [showAdd, setShowAdd] = useState(false);
+  const [newMember, setNewMember] = useState({ name: '', gender: '男', birth_year: 1960 });
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    fetchMembers();
+  }, [token]);
+
+  const fetchMembers = async () => {
+    const res = await fetch('/api/family', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setMembers(data);
+    }
+  };
+
+  const handleAdd = async () => {
+    if (!newMember.name) return toast.error('请输入称呼');
+    const res = await fetch('/api/family', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}` 
+      },
+      body: JSON.stringify(newMember)
+    });
+    if (res.ok) {
+      toast.success('添加成功');
+      setShowAdd(false);
+      setNewMember({ name: '', gender: '男', birth_year: 1960 });
+      fetchMembers();
+    } else if (res.status === 401) {
+      toast.error('登录状态已过期，请重新登录');
+    } else {
+      toast.error('添加失败');
+    }
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto py-8 px-4 font-sans animate-in fade-in duration-500">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">
+        <div>
+          <h1 className="text-3xl font-serif font-medium text-stone-800 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#f7f7f3] text-[#5a5a35] flex items-center justify-center">
+               <Users size={20} />
+            </div>
+            家人档案
+          </h1>
+          <p className="text-stone-500 mt-2 text-sm max-w-sm leading-relaxed">建立健康基线，追踪家人长期的体检指标趋势与异常关怀</p>
+        </div>
+        <button 
+          onClick={() => setShowAdd(true)}
+          className="bg-[#5a5a35] text-[#fdfdfa] px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:bg-[#4a4a2e] transition shadow-sm font-medium w-full sm:w-auto"
+        >
+          <Plus size={18} /> <span>添加家人</span>
+        </button>
+      </div>
+
+      {showAdd && (
+        <div className="bg-[#fdfdfa] p-6 sm:p-8 rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-[#e5e5dd] mb-8 animate-in slide-in-from-top-4 duration-300">
+          <h2 className="text-xl font-serif font-medium mb-6 text-stone-800">建立新档案</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="space-y-2">
+              <label className="text-xs text-stone-500 font-medium uppercase tracking-wider block">家人称谓</label>
+              <input 
+                type="text" value={newMember.name} onChange={e => setNewMember({...newMember, name: e.target.value})}
+                className="w-full px-4 py-2.5 bg-white border border-[#e5e5dd] focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] rounded-xl outline-none transition" placeholder="如：爸爸、妈妈"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs text-stone-500 font-medium uppercase tracking-wider block">性别</label>
+              <select 
+                value={newMember.gender} onChange={e => setNewMember({...newMember, gender: e.target.value})}
+                className="w-full px-4 py-2.5 bg-white border border-[#e5e5dd] focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] rounded-xl outline-none transition cursor-pointer"
+              >
+                <option>男</option>
+                <option>女</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs text-stone-500 font-medium uppercase tracking-wider block">出生年份</label>
+              <input 
+                type="number" value={newMember.birth_year} onChange={e => setNewMember({...newMember, birth_year: parseInt(e.target.value)})}
+                className="w-full px-4 py-2.5 bg-white border border-[#e5e5dd] focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] rounded-xl outline-none transition"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-3 pt-4 border-t border-[#e5e5dd]">
+            <button onClick={() => setShowAdd(false)} className="px-6 py-2.5 text-stone-500 hover:text-stone-800 font-medium transition rounded-full hover:bg-stone-100">取消</button>
+            <button onClick={handleAdd} className="px-8 py-2.5 bg-[#5a5a35] text-white rounded-full font-medium hover:bg-[#4a4a2e] transition shadow-sm">保存档案</button>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {members.map(m => (
+          <Link to={`/family/${m.id}`} key={m.id} className="bg-white p-6 rounded-[24px] shadow-sm border border-[#e5e5dd] flex items-center justify-between hover:shadow-md hover:border-[#5a5a35]/40 transition-all duration-300 group">
+            <div className="flex items-center gap-5">
+              <div className="w-14 h-14 bg-[#f7f7f3] border border-[#e5e5dd] rounded-full flex items-center justify-center text-2xl shadow-sm">
+                {m.avatar_emoji || '👤'}
+              </div>
+              <div>
+                <h3 className="font-serif font-medium text-stone-800 text-xl tracking-tight mb-1">{m.name}</h3>
+                <div className="flex items-center gap-2 text-xs font-medium text-stone-400">
+                   <span className="bg-[#f7f7f3] px-2 py-0.5 rounded-full border border-[#e5e5dd]">{m.gender}</span>
+                   <span className="bg-[#f7f7f3] px-2 py-0.5 rounded-full border border-[#e5e5dd]">{m.birth_year}年</span>
+                </div>
+              </div>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-[#fdfdfa] border border-[#e5e5dd] flex items-center justify-center group-hover:bg-[#5a5a35] group-hover:bg-opacity-10 text-stone-300 group-hover:text-[#5a5a35] transition">
+              <ChevronRight size={20} />
+            </div>
+          </Link>
+        ))}
+        {members.length === 0 && !showAdd && (
+          <div className="col-span-full py-16 text-center text-stone-500 bg-[#fdfdfa] rounded-[32px] border border-dashed border-[#d6d3d1]">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-[#e5e5dd] shadow-sm">
+               <Users size={24} className="text-[#a8a86c]" />
+            </div>
+            <p className="font-medium text-stone-700">暂无家人档案</p>
+            <p className="text-sm mt-1">创建一份档案，开启家庭健康的数据化管理</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

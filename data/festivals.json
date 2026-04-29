@@ -1,0 +1,49 @@
+[
+  {
+    "name": "春节",
+    "is_lunar": true,
+    "month": 1,
+    "day": 1,
+    "suggestion": "[打电话给爸妈拜年](tel:)"
+  },
+  {
+    "name": "元宵节",
+    "is_lunar": true,
+    "month": 1,
+    "day": 15,
+    "suggestion": "[问候吃元宵了吗](tel:)"
+  },
+  {
+    "name": "母亲节",
+    "is_lunar": false,
+    "month_rule": "may_2nd_sunday",
+    "suggestion": "[祝妈妈母亲节快乐](tel:)"
+  },
+  {
+    "name": "父亲节",
+    "is_lunar": false,
+    "month_rule": "june_3rd_sunday",
+    "suggestion": "[祝爸爸父亲节快乐](tel:)"
+  },
+  {
+    "name": "端午节",
+    "is_lunar": true,
+    "month": 5,
+    "day": 5,
+    "suggestion": "[问候端午安康](tel:)"
+  },
+  {
+    "name": "中秋节",
+    "is_lunar": true,
+    "month": 8,
+    "day": 15,
+    "suggestion": "[中秋问候，聊聊家常](tel:)"
+  },
+  {
+    "name": "重阳节",
+    "is_lunar": true,
+    "month": 9,
+    "day": 9,
+    "suggestion": "[重阳节问候父母健康](tel:)"
+  }
+]
