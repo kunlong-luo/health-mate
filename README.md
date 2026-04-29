@@ -9,6 +9,34 @@
 
 > An AI-powered proactive family health management tool. From solving the pain point of "helping children understand parents' medical reports" to evolving into a comprehensive platform including OCR-assisted lab report analysis, prescription medication management, medical visit diaries (with voice-to-text), offline-native PWA experience, and a proactive early-warning system.
 
+### Core Technologies & Workflow Explanation
+
+How exactly does HealthMate transform a photo of a messy medical report into clear, personalized health advice? It relies on three core technologies working together seamlessly: **OCR**, a **Three-Tier RAG Engine**, and an **Agent (ReAct Orchestrator)**. 
+
+Here is the step-by-step workflow:
+
+#### Step 1: The Eyes (OCR - Optical Character Recognition)
+When a user uploads a photo of a lab report, the system first needs to "read" the image. We use local, privacy-safe OCR technology (using pre-trained engine weights) to scan the image and extract unstructured text, outputting raw strings of test item names and numerical values.
+
+#### Step 2: The Memory (Three-Tier RAG Retrieval)
+RAG (Retrieval-Augmented Generation) is like giving the AI an open-book exam. Instead of hallucinating, it strictly looks up facts. We designed a **Three-Tier RAG structure**:
+- **L1 (Global Knowledge):** The "Medical Reference Book". It queries local databases (`lab_norms.json`, `medical_kb.json`) to see if an indicator like "ALT" is out of bounds for the user's age/gender.
+- **L2 (Family Timeline):** The "Family Medical Folder". The system retrieves the user's historical lab reports from the database. It compares today's "ALT" with the value from 3 months ago to see if it's improving or worsening.
+- **L3 (Personal Notes):** The "Diary". It searches the user's personal notes (e.g., "Dad felt dizzy last week") to provide unique contextual clues.
+
+#### Step 3: The Brain (Agent & ReAct Framework)
+Now the system has the text and the memories. How does it think? We implemented an **Agent Orchestrator** based on the **ReAct (Reason + Act)** pattern. 
+Instead of instantly throwing a prompt to an LLM, the Agent loops through a thought process:
+1. **Thought:** "I extracted the text. I need to check the reference norms for ALT."
+2. **Act (Tool Call):** Calls the `query_lab_norms` tool.
+3. **Observe:** The tool returns "ALT normal range is 0-40, user is at 55."
+4. **Thought:** "It's high. Let me check if they had high ALT before."
+5. **Act:** Calls the `query_lab_history` tool.
+6. **Observe:** "ALT was 70 three months ago."
+7. **Final Decision:** "Although ALT is high, it is improving. I will assess this as a moderate issue."
+
+Through this dynamic function calling and reasoning loop (running up to 8 iterations), the AI produces highly accurate, personalized outputs. This "thought process" is streamed back to the frontend in real-time using SSE (Server-Sent Events), showing the user exactly how the AI arrived at its conclusions.
+
 ### Key Features (PWA Production Ready)
 
 1. **Offline PWA Native Experience**: Works offline (e.g., in hospital basements) so you can always check your family's medical history.
@@ -16,114 +44,176 @@
 3. **Multi-Agent RAG Engine**: Simulated 3-Tier Multi-Modal RAG architecture (General Knowledge -> Family Timeline -> Personal Notes).
 4. **Privacy First**: Fully local capabilities with Ollama support + End-to-End Encryption principles built-in.
 
+### V5 Ultimate Release Highlights (Production PWA)
+
+**Architecture Evolution & Commercialization**:
+1. **Ultimate PWA Native Experience**:
+   - Introduced `vite-plugin-pwa` to achieve multi-device (iOS/Android/Desktop) offline frameworks. Historical medical records can be viewed even in no-network environments.
+   - Implemented a smart on-demand installation prompt component (`PWAPrompt`) for a seamless native app experience.
+2. **Pro Lifetime License & Data Security**:
+   - Offers a dual commercial loop: a free, purely local, unlimited version, and a ¥199 Pro cloud-based lifetime version.
+   - Provides End-to-End Encryption (E2EE) guidelines, accompanied by complete legal documents: "Privacy Policy", "User Agreement", and "Medical Disclaimer" for compliant public release.
+3. **Delivery-Level Infrastructure**:
+   - Built-in production-grade `docker-compose.yml` guide and GitHub Action `main.yml` CI/CD automated deployment flow.
+
+### Agent Framework Architecture
+
+Due to the environment constraints running in Node.js, this system uses **TypeScript + Custom ReAct Pattern** to implement the required Agent Orchestrator (see `src/server/agent/orchestrator.ts`).
+- **ReAct Engine**: Built on a self-executing while loop, implementing (Reason -> Act -> Observe).
+- **Streaming Output (SSE)**: The backend provides an SSE endpoint, and the frontend intercepts `step_start`, `tool_call`, `tool_result`, `thinking`, and `final` events in real-time to render an immersive thought process.
+- **Dynamic Tool Injection**: Utilizes the AI SDK Core's Function Calling system to invoke 8 custom-built tools.
+
+### Tencent Cloud SMS Tutorial (Mocked)
+
+This project supports lightweight mobile + verification code login. In production, Tencent Cloud SMS can be integrated:
+1. Register a Tencent Cloud account and enable the "SMS" service.
+2. Create a signature (e.g., HealthMate) and a template.
+3. Install the Tencent Cloud SDK `tencentcloud-sdk-nodejs` and replace the logging logic in `src/server/api/auth.ts`.
+*(In the current development environment, all verification codes are mocked as `123456` for easy testing)*
+
+### JWT Configuration
+
+1. Create a `.env` file in the root directory.
+2. Fill in the field: `JWT_SECRET=your_super_secret_key_here`.
+3. If not configured, it defaults to `healthmate_dev_secret_key` with a 7-day expiration.
+
+### V1 → V2 Data Migration Workflow
+
+If you have accumulated reports in V1 (the local version without login), when you log in for the first time and enter the **Family History Interpretation** page (`/history`), a migration banner will automatically appear. Click **Sync Now** to transition your old IndexedDB data to the centralized server database seamlessly.
+
+### Detailed Description of 8 Core Tools
+
+1. `ocr_parse_lab_report`: Extracts and parses lab report text from user images via OCR.
+2. `query_lab_norms`: Retrieves structured info (units, thresholds) from local `data/lab_norms.json`.
+3. `search_medical_kb`: Matches documents from `data/medical_kb.json` based on suspected symptoms.
+4. `analyze_indicator`: Diagnoses logical implications of an indicator's value vs reference threshold.
+5. `detect_critical_symptoms`: Scans for warning signs (e.g., massive bleeding, loss of consciousness).
+6. `assess_severity`: Evaluates and outputs moderate/severe report summaries.
+7. `generate_doctor_questions`: Generates customized questions for adult children to ask doctors.
+8. `generate_wechat_message_for_doctor`: Drafts a concise WeChat message summarizing patient stats for medical consultation.
+
+### V4 Upgrade Guide (Proactive Agent + Smart Alerts)
+
+1. **Weekly Report Trigger**: Backend scheduled by `node-cron` in `src/server/agent/proactive.ts`. Default at `0 8 * * 1`.
+2. **Proactive Scanning**: Runs daily at `0 3 * * *` to detect continuous anomalies. Notifications are pushed to the in-app message box (`/notifications`).
+3. **Multimedia Processing**: Voice dictation uses Web Speech API. Long image exports use `html2canvas` for clear sharing.
+
 ### Quick Start
 ```bash
 npm install
 npm run dev
 ```
 
+### Provider & Local Configuration
+
+**Google Gemini** is used by default. Via the Settings Page, you can switch models:
+1. **Ollama Local Mode**: Connect to `http://127.0.0.1:11434/v1` after running Ollama locally.
+2. **Third-Party Cloud Providers**: Supports DeepSeek, Tongyi Qianwen (DashScope), and Claude (Anthropic). Configure your API keys in the settings page.
+
 ---
 
 <a name="中文"></a>
-## 中文说明
+## 中文说明 (HealthMate)
 
 > 一款基于大语言模型构建的**主动式家庭健康管理工具**。从“帮子女看懂一份检查报告”的单点痛点切入，演进为涵盖化验单OCR辅助、处方药管理、就诊日记（伴随录音听写）、离线原生 PWA 体验与主动式自动预警系统。
 
-## V5 极致发布版更新亮点 (生产环境 PWA 化)
+### 核心技术与原理解析 (Agent, RAG, OCR)
+
+HealthMate 是如何把一张模糊、杂乱的化验单单转化为清晰、个性化的健康建议的？这背后离不开三大核心技术的无缝协作：**OCR（光学字符识别）**、**三层 RAG（检索增强生成）引擎** 以及 **Agent（智能体与 ReAct 编排器）**。
+
+下面为您通俗清晰地讲解完整的工作流程：
+
+#### 第一步：系统的“眼睛” (OCR 图像提取)
+当用户拍摄或上传一张化验单照片时，系统首先要“看懂”图片。我们利用本地化、隐私安全的 OCR 技术（加载经过训练的中英文识别包），扫描图片并提取出非结构化的纯文本。这一步把图片变成了 AI 可以认识的“项目名称”和“数值”。
+
+#### 第二步：系统的“记忆” (三层 RAG 检索体系)
+RAG（Retrieval-Augmented Generation）就像是给 AI 提供开卷考试的资料，防止它胡说八道（产生幻觉）。我们设计了独特的**三层 RAG 架构**：
+- **L1 (通用医学字典)**：当 OCR 提取到“谷丙转氨酶(ALT)”时，系统通过 RAG 快速去本地医学知识库（`lab_norms.json`）中检索，看这个数值在患者目前的年龄和性别下是否超标。
+- **L2 (家庭时间线档案)**：相当于“家庭病历本”。系统会主动去数据库里查患者**过去**的历史化验单。AI 会对比：“今天的 ALT 是 55，那三个月前是多少？”
+- **L3 (个人备忘录)**：相当于“照护日记”。系统会从用户的日常就诊日记、备忘中检索线索（如：“上周帮爸爸记录了头晕”），为诊断提供极具个性化的上下文。
+
+#### 第三步：系统的“大脑” (Agent 与 ReAct 框架)
+有了文字和记忆，AI 是如何思考的？我们在后端实现了一个基于 **ReAct (Reason推理 + Act行动)** 模式的 **Agent 编排器**。
+AI 不会只凭一句话直接盲目作答，而是进入一个像人类思考一样的循环：
+1. **思考 (Thought)**：“我拿到了化验单文字，我需要先查一下正常的 ALT 参考值。”
+2. **行动 (Act / 工具调用)**：调用 `query_lab_norms` 工具获取正常阈值。
+3. **观察 (Observe)**：工具返回“正常 0-40，目前 55，偏高。”
+4. **思考 (Thought)**：“偏高。那我需要查一下他以前有没有偏高。”
+5. **行动 (Act)**：调用 `query_lab_history` 工具获取历史数据。
+6. **观察 (Observe)**：“发现三个月前是 70。”
+7. **最终决策 (Final)**：“虽然 ALT 偏高，但在好转，评价为中度异常，并给出日常保养建议。”
+
+通过这种动态的方法调用（Function Calling）和推理循环（最多可达8轮深思），AI 做出了高度准确、极具针对性的判断。同时，这个“思考过程”会通过 SSE 服务端推流技术，实时、动感地打字展示在前端界面上，让用户不仅得到结果，更看懂 AI 诊断的整个思路。
+
+### 核心特性 (生产准备就绪)
+
+1. **极致 PWA 原生体验**: 支持离线访问，在无网环境（如医院负一层）也可查看历史病历。
+2. **主动式 AI 预警**: 自动监控异常趋势与处方药余量，提前提醒。
+3. **多模态 RAG 引擎**: 实装三层 RAG 架构（通用知识 -> 家庭时间线 -> 个人笔记）。
+4. **隐私优先**: 完全支持本地运行（Ollama）并附加上述端到端加密（E2EE）指导原则。
+
+### V5 极致发布版更新亮点 (生产环境 PWA 化)
 
 **架构演进与商业化 (生产准备就绪)**：
 1. **极致 PWA 原生体验**：
-   - 引入 `vite-plugin-pwa` 实现多设备（iOS/Android/Desktop）离线框架。在无网环境（如医院负一层）也可查看历史病历。
+   - 引入 `vite-plugin-pwa` 实现多设备（iOS/Android/Desktop）离线框架。
    - 实现智能按需安装引导组件 (`PWAPrompt`)，无缝获取原生应用体验。
 2. **Pro 终身买断机制与数据安全**：
    - 提供免费纯本地无限制版，与 ¥199 Pro 云端高阶买断版的双向商业闭环。
-   - 提供端到端加密（E2EE）指导原则，附带完整的合法文书：《隐私政策》《用户协议》《医疗免责声明》以便正规合法上线。
+   - 提供端到端加密（E2EE）指导原则，附带完整的合法文书以支持正规上线。
 3. **交付级基建沉淀**：
    - 内置生产级 `docker-compose.yml` 指南与 GitHub Action `main.yml` CI/CD 自动化部署流。
 
----
+### Agent 框架架构说明
 
-## Agent 框架架构说明
-
-由于环境限制在 Node.js 中运行，本系统采用 **TypeScript + 自研 ReAct 模式** 实现了所需的 Agent 编排器（详见 \`src/server/agent/orchestrator.ts\`）。
-- **ReAct 引擎**: 基于自执行 while 循环构建，实现（Reason -> Act -> Observe），通过多轮迭代(最多 8 轮)完成逻辑抽象。
-- **流式输出 (SSE)**: 后端提供 SSE 端点，前端实时截获 \`step_start\`, \`tool_call\`, \`tool_result\`, \`thinking\` 以及 \`final\` 事件进行沉浸式思考过程的渲染。
+由于环境限制在 Node.js 中运行，本系统采用 **TypeScript + 自研 ReAct 模式** 实现了所需的 Agent 编排器（详见 `src/server/agent/orchestrator.ts`）。
+- **ReAct 引擎**: 基于自执行 while 循环构建，实现（Reason -> Act -> Observe），通过多轮迭代完成逻辑抽象。
+- **流式输出 (SSE)**: 后端提供 SSE 端点，前端实时截获事件进行沉浸式思考过程的渲染。
 - **动态工具注入**: 利用 AI SDK Core 的 Function Calling 系统调用 8 个专门定制的工具。
 
-## 三层 RAG 设计文档
+### 腾讯云短信申请教程 (模拟配置)
 
-本系统模拟了三层 RAG 检索引擎：
-- **L1 (通用医学知识 - 已实装)**: 针对 \`data/medical_kb.json\` 和 \`data/lab_norms.json\` 进行快速匹配。
-- **L2 (家庭档案 - V2实装)**: 用户专属多成员医疗历史时间线串联（\`search_family_history\`、\`query_lab_history\`）。
-- **L3 (笔记记忆 - V2实装)**: 提取用户的照护日记或额外特征（\`search_personal_notes\`、\`save_note\`）。
-
-## 腾讯云短信申请教程 (模拟配置)
 本项目支持轻量手机+验证码登录。在生产环境中，可集成腾讯云 SMS：
 1. 注册腾讯云账号并开通“短信”服务。
-2. 创建签名（如：HealthMate）和模板（如：您的登录验证码是 {1}，5分钟内有效）。
-3. 安装腾讯云 SDK \`tencentcloud-sdk-nodejs\` 并替换 \`src/server/api/auth.ts\` 中的打印日志逻辑。
-*(当前开发环境默认将所有验证码 mock 为 \`123456\` 便于测试)*
+2. 创建签名和模板。
+3. 安装腾讯云 SDK 并替换 `src/server/api/auth.ts` 中的逻辑。
+*(当前开发环境默认将所有验证码 mock 为 `123456` 便于测试)*
 
-## JWT 配置说明
-由于环境未提供全功能的 python-jose，V2 中端切换至 Node.js 的 \`jsonwebtoken\` 加密鉴权。
-1. 若要配置生产密钥，请在根目录新建 \`.env\` 文件。
-2. 填写字段: \`JWT_SECRET=your_super_secret_key_here\`。
-3. 未配置则默认 \`healthmate_dev_secret_key\`，过期时间7天。可通过请求带 \`Authorization: Bearer <token>\` 访问安全接口。
+### JWT 配置说明
 
-## V1 → V2 数据迁移流程演示
-若您曾在 V1 (无登录本地版) 积攒了多份报告，系统在您首次登录进入**全家历史解读**页 (`/history`) 时，将自动出现一条迁移横幅。
-点击**立即同步**，并选择“这是属于哪位家人的档案”，旧的 IndexedDB 报告及化验指标将批量转化推送到服务端进行中心化聚合和趋势绘图。无缝切换到 V2！
+1. 若要配置生产密钥，请在根目录新建 `.env` 文件。
+2. 填写字段: `JWT_SECRET=your_super_secret_key_here`。
+3. 未配置则默认 `healthmate_dev_secret_key`。
 
-## 三层 RAG 检索示例日志
-在 Agent 思考中，您可以实时观察到类似以下的调用顺序模拟了三层 RAG 多模态融合引擎：
-1. `ocr_parse_lab_report` -> 读取报告图片
-2. `query_member_profile` -> 获取用户 L2 长期基础设定 (e.g. 55岁男，有高血压病史)
-3. `query_lab_history` / `search_family_history` -> 对比 3个月前的 ALT 值 (L2)
-4. `search_personal_notes` -> “搜索关键词：胸闷/用药反馈” (L3 唤醒)
-5. `analyze_indicator` -> 进行 L1 的单一指标横向排查
-6. 最终完成 JSON 的输出决策。
+### V1 → V2 数据迁移流程演示
 
-## 8 个核心工具的详细说明
+若您曾在 V1 (无登录本地版) 积攒了多份报告，系统在您首次登录进入**全家历史解读**页 (`/history`) 时，将自动出现迁移横幅。点击**立即同步**，旧数据即可推送至服务端并无缝切换至 V2。
 
-1. \`ocr_parse_lab_report\`: 接收用户图片文件路径，利用 tesseract.js 对化验单影像进行 OCR 文本抽取解析。
-2. \`query_lab_norms\`: 基于抽取的指标 (如 ALT, AST)，直接检索本地 \`data/lab_norms.json\` 获取预制的指标、单位、阈值等结构化信息。
-3. \`search_medical_kb\`: 针对患者疑似病症或深层医学原理提问，自 \`data/medical_kb.json\` 执行关键词打分匹配找回相关文档。
-4. \`analyze_indicator\`: 让环境模型针对单一数据的数值与参考阈值进行逻辑诊断。
-5. \`detect_critical_symptoms\`: 在 Agent 首先执行此工具，扫描危险标志（大出血、意识丧失），任何警告将直接输出到急救横幅提示中。
-6. \`assess_severity\`: 综合多条异常化验指标，评估得出中度/重度提示报告。
-7. \`generate_doctor_questions\`: 面向 35-50 岁子女人群生成针对父母报告可以直接拿去实体医院请教医生的提问列表。
-8. \`generate_wechat_message_for_doctor\`: 沉淀为一小段适合微信发送的、凝练了患者异常数据的请教口吻文案。
+### 8 个核心工具的详细说明
 
-## V4 升级指南（主动 Agent + 智能预警）
+1. `ocr_parse_lab_report`: 利用 OCR 对化验单影像进行文本抽取解析。
+2. `query_lab_norms`: 检索本地化验指标、单位、阈值等结构化信息。
+3. `search_medical_kb`: 针对患者病症执行关键词打分找回相关文档。
+4. `analyze_indicator`: 针对单一数值与阈值进行逻辑诊断。
+5. `detect_critical_symptoms`: 扫描危险标志，任何警告直接输出到急救横幅提示。
+6. `assess_severity`: 综合异常指标，评估得出中度/重度提示报告。
+7. `generate_doctor_questions`: 生成可向实体医院医生请教的提问列表。
+8. `generate_wechat_message_for_doctor`: 生成适合微信发送的凝练请教口吻文案。
 
-### 周报触发与测试方法
-1. 后端由 `node-cron` 调度，任务定义位于 `src/server/agent/proactive.ts`。
-2. 默认周报触发时间为 `0 8 * * 1`（每周一上午8点）。
-3. **测试技巧**：在开发环境下，可以临时将 cron 表达式改写为 `* * * * *`（每分钟执行一次）或编写一个专用 HTTP endpoint 来手动触发 `generate_weekly_report` 工具和邮件发送逻辑。
+### V4 升级指南（主动 Agent + 智能预警）
 
-### 主动 Agent 调试方法
-1. 主动扫描同样基于定时任务 `0 3 * * *`（每天凌晨3点）。
-2. 在 `proactive.ts` 中可以查看模拟打分的逻辑（或接入大模型 `system prompt` 判断指标是否连续异常）。
-3. 当命中异常后，Agent 会将 `notification` 写入表，通过客户端顶部小红点（左侧导航消息图标）以及独立的消息盒子（`/notifications`）触达用户。不主动通过短信/Push打扰父母，符合“应用主动找子女”定位。
+1. **周报触发**: 后端由 `node-cron` 调度，任务位于 `src/server/agent/proactive.ts`。默认时间每周一上午8点。
+2. **主动扫描调试**: 同样基于定时任务，命中异常后写入表，通过客户端红点和独立消息盒子触达用户，不主动强打扰父母。
+3. **多媒体性能调优**: 语音听写使用 Web Speech API，长图导出加入高清优化。
 
-### 多媒体处理性能调优
-1. **语音输入**：就诊伴侣模块下，使用了 Web Speech API 进行流式听写，转写在本地和浏览器环境实时发生。
-2. **长图导出**：年度健康报告使用 `html2canvas` 导出时，设置了 `scale: 2` 参数，保证分享长图至朋友圈时的清晰度。
-3. **工具矩阵拓展**：Agent 工具集从原本的 25 个扩展至 35+ 个，完整覆盖 `predict_medication_runout`, `detect_anomaly_in_history`, `analyze_indicator_trend` 等主动型防患预警原子能力。
+### 快速启动
+```bash
+npm install
+npm run dev
+```
 
-## 5 分钟快速启动
+### Provider 与本地配置教程
 
-本系统为 V1 预览应用，并遵循 Cloud Run 运行规范。通过 Express 中间件挂载了 Vite 前端。
-1. 启动命令（开发环境支持自动全栈重启）: \`npm run dev\`
-2. 系统自动绑定全栈静态中间件。 
-
-## Provider 与本地配置教程
-
-默认已使用 **Google Gemini (AI Studio内置)** 作为云端模式驱动（免费调用）。通过 SettingsPage 设置页可以切换到其他模型驱动。因环境限制部分 Node 本机编译模块，大模型端点全部采取标准兼容 REST API：
-1. **Ollama 本地模式**: 确保您本机或者运行载体开放了 API \`http://127.0.0.1:11434/v1\`，选中为 \`qwen2.5:7b\` 等您本机的模型。（您需要自行部署 Ollama 和对应模型）。
-2. **三方云端提供商注册链**:
-    - **DeepSeek**: [注册并获取 API Key](https://platform.deepseek.com/)
-    - **通义千问**: [注册 DashScope 并获取 API Key](https://dashscope.aliyun.com/)
-    - **Claude**: [注册 Anthropic 开发者获取 API Key](https://console.anthropic.com/)
-
-在应用配置页面（左侧 "设置" 导航）可填写您的密钥及端点。密钥只加密保存在后端的 \`data/healthmate.db\` 内。
+默认已使用 **Google Gemini** 作为云端模式驱动（免费调用）。
+1. **Ollama 本地模式**: 修改大模型端点至本地推理服务接口。
+2. **三方云端提供商**: 支持 DeepSeek、通义千问 和 Claude，通过平台自行申请 API Key 并在应用设置页填入。密钥只加密保存在本地轻量数据库中。

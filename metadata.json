@@ -1,6 +1,9 @@
 {
   "name": "HealthMate",
-  "description": "",
-  "requestFramePermissions": [],
+  "description": "A proactive AI family health assistant supporting multi-tier RAG, offline PWA experience, and scheduled health anomaly check monitoring.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ],
   "majorCapabilities": []
 }
