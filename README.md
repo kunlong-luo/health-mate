@@ -1,5 +1,32 @@
 # HealthMate 🩺
 
+[English](#english) | [中文](#中文)
+
+---
+
+<a name="english"></a>
+## HealthMate - Proactive Family Health AI Assistant
+
+> An AI-powered proactive family health management tool. From solving the pain point of "helping children understand parents' medical reports" to evolving into a comprehensive platform including OCR-assisted lab report analysis, prescription medication management, medical visit diaries (with voice-to-text), offline-native PWA experience, and a proactive early-warning system.
+
+### Key Features (PWA Production Ready)
+
+1. **Offline PWA Native Experience**: Works offline (e.g., in hospital basements) so you can always check your family's medical history.
+2. **Proactive AI Watchdog**: Automatically monitors anomaly trends and medication run-out dates.
+3. **Multi-Agent RAG Engine**: Simulated 3-Tier Multi-Modal RAG architecture (General Knowledge -> Family Timeline -> Personal Notes).
+4. **Privacy First**: Fully local capabilities with Ollama support + End-to-End Encryption principles built-in.
+
+### Quick Start
+```bash
+npm install
+npm run dev
+```
+
+---
+
+<a name="中文"></a>
+## 中文说明
+
 > 一款基于大语言模型构建的**主动式家庭健康管理工具**。从“帮子女看懂一份检查报告”的单点痛点切入，演进为涵盖化验单OCR辅助、处方药管理、就诊日记（伴随录音听写）、离线原生 PWA 体验与主动式自动预警系统。
 
 ## V5 极致发布版更新亮点 (生产环境 PWA 化)
