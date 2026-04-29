@@ -2,6 +2,10 @@
 
 [**🇨🇳 中文说明 (Chinese Version) -> README_zh.md**](./README_zh.md)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![PWA Ready](https://img.shields.io/badge/PWA-Ready-purple.svg)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
+
 ---
 
 ## HealthMate - Proactive Family Health AI Assistant
