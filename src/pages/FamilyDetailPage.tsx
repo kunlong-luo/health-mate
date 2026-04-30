@@ -152,7 +152,7 @@ export default function FamilyDetailPage() {
             <div className="space-y-2">
               <label className="text-xs text-stone-500 font-medium uppercase tracking-wider block">{t('family.birthYearLabel')}</label>
               <input 
-                type="number" value={editForm.birth_year} onChange={e => setEditForm({...editForm, birth_year: parseInt(e.target.value)})}
+                type="number" value={editForm.birth_year || ''} onChange={e => setEditForm({...editForm, birth_year: parseInt(e.target.value)})}
                 className="w-full px-4 py-2.5 bg-white border border-[#e5e5dd] focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] rounded-xl outline-none transition"
               />
             </div>

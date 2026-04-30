@@ -26,9 +26,9 @@ const MODEL_OPTIONS: Record<string, {label: string, value: string}[]> = {
     { label: 'Qwen Long', value: 'qwen-long' }
   ],
   claude: [
-    { label: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet-20241022' },
-    { label: 'Claude 3.5 Haiku', value: 'claude-3-5-haiku-20241022' },
-    { label: 'Claude 3 Opus', value: 'claude-3-opus-20240229' }
+    { label: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet' },
+    { label: 'Claude 3.5 Haiku', value: 'claude-3-5-haiku' },
+    { label: 'Claude 3 Opus', value: 'claude-3-opus' }
   ],
   ollama: [
     { label: 'Qwen 2.5 (7B)', value: 'qwen2.5:7b' },
