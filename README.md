@@ -9,7 +9,6 @@
 ---
 
 ![Homepage Screenshot](./docs/screenshot.png)
-*(Note: Please rename your full homepage screenshot to `screenshot.png` and place it in the `docs/` directory. GIF demo is coming soon 🚀)*
 
 ## 🌟 HealthMate - Proactive Family Health AI Assistant
 

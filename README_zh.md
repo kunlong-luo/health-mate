@@ -9,7 +9,6 @@
 ---
 
 ![首页截图 - Homepage](./docs/screenshot.png)
-*(注：请将您的完整首页截图命名为 `screenshot.png` 并放置在 `docs/` 目录下。GIF 动态演示正在筹备中 🚀)*
 
 ## 🌟 中文说明 (HealthMate)
 
