@@ -4,9 +4,11 @@ import { useAuth } from "../context/AuthContext";
 import { Bell, FileText, Activity, AlertTriangle, CheckCircle, ChevronRight } from "lucide-react";
 import dayjs from "dayjs";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 export default function NotificationsPage() {
   const { token } = useAuth();
+  const { t } = useTranslation();
   
   const { data: notifications = [], refetch } = useQuery({
     queryKey: ['notifications'],
@@ -37,14 +39,14 @@ export default function NotificationsPage() {
     <div className="py-6 animate-in fade-in">
       <div className="flex items-center justify-between mb-6">
         <h2 className="font-serif text-2xl font-medium text-stone-800 flex items-center gap-2">
-          <Bell className="text-[#5A5A40]" /> 消息中心
+          <Bell className="text-[#5A5A40]" /> {t('notifications.title')}
         </h2>
       </div>
 
       {notifications.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-3xl border border-stone-100 shadow-sm">
            <Bell size={48} className="mx-auto text-stone-200 mb-4" />
-           <p className="text-stone-500 font-medium">暂时没有新消息</p>
+           <p className="text-stone-500 font-medium">{t('notifications.noMessages')}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -68,7 +70,7 @@ export default function NotificationsPage() {
                  <p className="text-sm text-stone-600 mb-3 leading-relaxed whitespace-pre-wrap">{n.content}</p>
                  {n.type === 'weekly_report' && (
                    <div className="flex gap-2">
-                     <a href="tel:" className="text-xs bg-stone-100 text-stone-600 px-3 py-1.5 rounded-lg border border-stone-200 hover:bg-stone-200 transition">打电话看看</a>
+                     <a href="tel:" className="text-xs bg-stone-100 text-stone-600 px-3 py-1.5 rounded-lg border border-stone-200 hover:bg-stone-200 transition">{t('notifications.callNow')}</a>
                    </div>
                  )}
                </div>

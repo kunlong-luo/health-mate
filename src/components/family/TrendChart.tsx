@@ -1,7 +1,9 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Activity } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export function TrendChart({ trendData, selectedIndicator, onSelectIndicator }: { trendData: any[], selectedIndicator: string, onSelectIndicator: (ind: string) => void }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-white p-6 rounded-3xl shadow-sm border border-stone-100">
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
@@ -33,7 +35,7 @@ export function TrendChart({ trendData, selectedIndicator, onSelectIndicator }: 
       ) : (
         <div className="text-center py-12 text-stone-400">
           <Activity size={32} className="mx-auto mb-3 opacity-50" />
-          暂无该指标的趋势数据
+          {t('trend.noData')}
         </div>
       )}
     </div>

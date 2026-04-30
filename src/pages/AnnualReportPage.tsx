@@ -1,53 +1,55 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Download, ChevronRight, ChevronLeft, Heart } from "lucide-react";
 import html2canvas from "html2canvas";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
-
-const bpData = [
-  { month: '1月', sys: 145, dia: 90 },
-  { month: '3月', sys: 138, dia: 88 },
-  { month: '6月', sys: 142, dia: 89 },
-  { month: '9月', sys: 132, dia: 84 },
-  { month: '12月', sys: 128, dia: 82 },
-];
+import { useTranslation } from "react-i18next";
 
 export default function AnnualReportPage() {
   const { user } = useAuth();
   const [page, setPage] = useState(0);
+  const { t } = useTranslation();
 
-  const pages = [
+  const bpData = useMemo(() => [
+    { month: t('annual.jan'), sys: 145, dia: 90 },
+    { month: t('annual.mar'), sys: 138, dia: 88 },
+    { month: t('annual.jun'), sys: 142, dia: 89 },
+    { month: t('annual.sep'), sys: 132, dia: 84 },
+    { month: t('annual.dec'), sys: 128, dia: 82 },
+  ], [t]);
+
+  const pages = useMemo(() => [
     {
-      title: "陪伴开始的地方",
-      content: `2025年，你一共帮爸妈看了 14 次报告\n相当于平均每个月都跑了一趟医院。`,
-      highlight: "辛苦了，HealthMate都记着呢。",
+      title: t('annual.page1Title'),
+      content: t('annual.page1Content'),
+      highlight: t('annual.page1Highlight'),
       color: "bg-[#e8ecef]",
       textColor: "text-[#2d3a4b]"
     },
     {
-      title: "妈妈的坚持",
-      content: "妈妈的血压指标改善了 12%\n收缩压从高危回落到了安全区间。",
-      highlight: "这是你们共同努力的结果。",
+      title: t('annual.page2Title'),
+      content: t('annual.page2Content'),
+      highlight: t('annual.page2Highlight'),
       color: "bg-[#f5eef0]",
       textColor: "text-[#6b4249]",
       hasChart: true
     },
     {
-      title: "一点点小危机",
-      content: "10月的时候，爸爸的甘油三酯有点偏高\n不过你在两周后就带他去复查了。",
-      highlight: "防患于未然，你是他们的健康守门人。",
+      title: t('annual.page3Title'),
+      content: t('annual.page3Content'),
+      highlight: t('annual.page3Highlight'),
       color: "bg-[#f9f5e3]",
       textColor: "text-[#5a4810]"
     },
     {
-      title: "年度总结",
-      content: `你陪伴爸妈的一年\n有焦虑，有奔波，但更多的是安心。`,
-      highlight: "2026年，我们继续同行。❤️",
+      title: t('annual.page4Title'),
+      content: t('annual.page4Content'),
+      highlight: t('annual.page4Highlight'),
       color: "bg-[#5A5A40]",
       textColor: "text-white"
     }
-  ];
+  ], [t]);
 
   const handleExport = async () => {
     const el = document.getElementById("report-card");
@@ -85,7 +87,7 @@ export default function AnnualReportPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.1)" />
                       <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#6b4249', fontSize: 12}} />
                       <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', background: 'rgba(255,255,255,0.9)' }} />
-                      <Line type="monotone" name="收缩压" dataKey="sys" stroke="#d9777f" strokeWidth={3} dot={{r: 4}} />
+                      <Line type="monotone" name={t('annual.sys')} dataKey="sys" stroke="#d9777f" strokeWidth={3} dot={{r: 4}} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>

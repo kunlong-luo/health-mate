@@ -5,17 +5,19 @@ import { Check, ShieldCheck, Sparkles, Server, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 export default function PricingPage() {
   const { user, token, updateUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const isPro = user?.is_pro === 1;
 
   const handleUpgrade = async () => {
     if (!token) {
-      toast.error("请先登录");
+      toast.error(t('pricing.loginFirst'));
       navigate("/login");
       return;
     }
@@ -28,13 +30,13 @@ export default function PricingPage() {
       });
       const data = await res.json();
       if (data.success) {
-        toast.success("成功升级至 Pro！");
+        toast.success(t('pricing.upgradeSuccess'));
         if (user) {
           updateUser({ ...user, is_pro: 1 });
         }
       }
     } catch (e) {
-      toast.error("网络错误");
+      toast.error(t('pricing.networkError'));
     }
     setLoading(false);
   };
@@ -43,10 +45,10 @@ export default function PricingPage() {
     <div className="py-8 px-4 animate-in fade-in max-w-4xl mx-auto">
       <div className="text-center mb-12">
         <h1 className="text-3xl sm:text-4xl font-serif font-medium text-stone-800 mb-4">
-          选择适合您的健康计划
+          {t('pricing.title')}
         </h1>
         <p className="text-stone-500 text-lg">
-          每一份陪伴都值得珍视。升级 Pro，解锁全平台守护体系。
+          {t('pricing.subtitle')}
         </p>
       </div>
 
@@ -56,15 +58,15 @@ export default function PricingPage() {
           <div className="absolute top-0 right-0 p-6 opacity-5">
              <Server size={100} />
           </div>
-          <h2 className="text-2xl font-serif font-medium text-stone-800 mb-2">本地版</h2>
+          <h2 className="text-2xl font-serif font-medium text-stone-800 mb-2">{t('pricing.localTitle')}</h2>
           <div className="text-4xl font-semibold mb-6 text-stone-800">
-            免费<span className="text-base font-normal text-stone-500"> / 永远</span>
+            {t('pricing.freeForever').split(' / ')[0]}<span className="text-base font-normal text-stone-500"> / {t('pricing.freeForever').split(' / ')[1]}</span>
           </div>
           <p className="text-stone-500 mb-8 h-12">
-            完整本地模型支持，无限制使用，您的数据留在您的设备上。
+            {t('pricing.localDesc')}
           </p>
           <ul className="space-y-4 flex-1 mb-8">
-            {["不限数量添加家人", "无限次化验单OCR解读", "就诊日记 & 录音速记", "基础服药提醒与分析"].map((feature, i) => (
+            {[t('pricing.localFeature1'), t('pricing.localFeature2'), t('pricing.localFeature3'), t('pricing.localFeature4')].map((feature, i) => (
               <li key={i} className="flex gap-3 text-stone-700">
                 <Check className="text-stone-300 shrink-0" size={20} />
                 <span>{feature}</span>
@@ -75,7 +77,7 @@ export default function PricingPage() {
             disabled
             className="w-full py-4 rounded-xl bg-stone-100 text-stone-500 font-medium"
           >
-            您当前所在的版本
+            {t('pricing.currentPlan')}
           </button>
         </div>
 
@@ -86,18 +88,18 @@ export default function PricingPage() {
           </div>
           
           <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-[#5A5A40] text-white px-4 py-1 rounded-b-xl text-sm font-medium flex items-center gap-1">
-             <Sparkles size={14} /> 主推
+             <Sparkles size={14} /> {t('pricing.recommended')}
           </div>
 
-          <h2 className="text-2xl font-serif font-medium text-white mb-2">Pro 云端版</h2>
+          <h2 className="text-2xl font-serif font-medium text-white mb-2">{t('pricing.proTitle')}</h2>
           <div className="text-4xl font-semibold mb-6 text-white flex items-baseline gap-2">
-            ¥199 <span className="text-base font-normal text-stone-400"> / 终身买断</span>
+            ¥199 <span className="text-base font-normal text-stone-400">{t('pricing.lifetime')}</span>
           </div>
           <p className="text-stone-400 mb-8 h-12">
-            解锁云端大模型，自动同步备份，享高阶分析与专人客服。
+            {t('pricing.proDesc')}
           </p>
           <ul className="space-y-4 flex-1 mb-8 relative z-10">
-            {["全自动云端同步备份 (端到端加密)", "PDF 完整体检报告深度解析", "影像科报告智能提取", "年度健康报告 深度定制版", "优先专属产品客服"].map((feature, i) => (
+            {[t('pricing.proFeature1'), t('pricing.proFeature2'), t('pricing.proFeature3'), t('pricing.proFeature4'), t('pricing.proFeature5')].map((feature, i) => (
               <li key={i} className="flex gap-3 text-stone-300">
                 <Check className="text-[#e9edca] shrink-0" size={20} />
                 <span>{feature}</span>
@@ -116,14 +118,14 @@ export default function PricingPage() {
             )}
           >
             {loading ? <Zap className="animate-pulse" size={20} /> : null}
-            {isPro ? "已解锁 Pro 权限" : "立即买断升级"}
+            {isPro ? t('pricing.unlocked') : t('pricing.upgradeNow')}
           </button>
         </div>
       </div>
 
       <div className="mt-16 text-center text-stone-400 text-sm">
-        <p>支付即表示同意<a href="#" className="underline hover:text-stone-600 outline-none">《HealthMate 用户服务协议》</a>与<a href="#" className="underline hover:text-stone-600 outline-none">《隐私政策》</a></p>
-        <p className="mt-2 text-xs">郑重承诺：7日内无理由退款 | 所有的医疗建议均需咨询专业医师</p>
+        <p>{t('pricing.agreementPrefix')}<a href="#" className="underline hover:text-stone-600 outline-none">{t('pricing.agreement')}</a>{t('pricing.and')}<a href="#" className="underline hover:text-stone-600 outline-none">{t('pricing.privacy')}</a></p>
+        <p className="mt-2 text-xs">{t('pricing.promise')}</p>
       </div>
     </div>
   );

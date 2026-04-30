@@ -15,7 +15,7 @@ export const UploadSection = memo(function UploadSection({ members, selectedMemb
 
   const onDrop = useCallback(async (acceptedFiles: File[], fileRejections: any[]) => {
     if (!token) {
-       toast.error("Please log in first");
+       toast.error(t('upload.needLogin'));
        navigate('/login');
        return;
     }
@@ -25,15 +25,15 @@ export const UploadSection = memo(function UploadSection({ members, selectedMemb
        return;
     }
     if (!selectedMemberId) {
-       toast.error("Please select a family member");
+       toast.error(t('upload.needFamily'));
        return;
     }
 
     if (fileRejections.length > 0) {
       if (fileRejections[0].errors[0].code === 'file-too-large') {
-        toast.error("File size cannot exceed 10MB");
+        toast.error(t('upload.fileTooLarge'));
       } else {
-        toast.error("Unsupported file format");
+        toast.error(t('upload.unsupportedFormat'));
       }
       return;
     }
@@ -56,10 +56,10 @@ export const UploadSection = memo(function UploadSection({ members, selectedMemb
       });
       const data = await res.json().catch(() => ({}));
       
-      if (!res.ok) throw new Error(data.error || "Upload failed");
+      if (!res.ok) throw new Error(data.error || t('upload.uploadFailed'));
       navigate(`/process/${data.task_id}`);
     } catch (err: any) {
-      toast.error(err.message || "Upload failed. Please try again.");
+      toast.error(err.message || t('upload.uploadFailedRetry'));
       setIsUploading(false);
     }
   };

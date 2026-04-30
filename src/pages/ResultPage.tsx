@@ -10,8 +10,10 @@ import { ResultAnomalies } from "../components/result/ResultAnomalies";
 import { ResultActions } from "../components/result/ResultActions";
 import { motion } from "framer-motion";
 import Markdown from 'react-markdown';
+import { useTranslation } from 'react-i18next';
 
 export default function ResultPage() {
+  const { t } = useTranslation();
   const { taskId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ export default function ResultPage() {
             if (data.result) {
               setResult(data.result);
             } else {
-              toast.error('找不到远端报告');
+              toast.error(t('result.notFound'));
               navigate('/');
             }
          })
@@ -45,7 +47,7 @@ export default function ResultPage() {
          }
        }).finally(() => setLoading(false));
     }
-  }, [result, taskId, navigate, mode, token]);
+  }, [result, taskId, navigate, mode, token, t]);
 
   useEffect(() => {
     if (result && taskId && mode === 'local') {
@@ -75,7 +77,7 @@ export default function ResultPage() {
         className="flex items-center gap-1.5 text-sm font-medium text-stone-500 hover:text-stone-800 transition bg-stone-100/50 hover:bg-stone-100 px-4 py-2 rounded-full w-fit"
       >
         <ChevronLeft size={16} />
-        返回主页
+        {t('result.backHome')}
       </button>
 
       <ResultBanner criticalAlert={result.critical_alert} />
@@ -94,7 +96,7 @@ export default function ResultPage() {
             <div className="w-10 h-10 rounded-full bg-[#f7f7f3] border border-[#e5e5dd] text-[#5a5a35] flex items-center justify-center shrink-0 shadow-inner">
                <Activity size={20} />
             </div>
-            <h2 className="font-serif text-3xl font-medium text-stone-800">总览评估</h2>
+            <h2 className="font-serif text-3xl font-medium text-stone-800">{t('result.overallSummary')}</h2>
           </div>
           <div className="text-stone-700 leading-[1.8] text-lg font-serif">
             {/* Displaying summary directly as requested */}
@@ -116,7 +118,7 @@ export default function ResultPage() {
       {/* Disclaimer */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-center pt-8">
         <p className="text-[11px] text-stone-400 max-w-lg mx-auto leading-relaxed px-4">
-          免责声明：本解读由 HealthMate AI 辅助生成，仅供家属参考了解病情背景，<span className="font-bold underline decoration-stone-300 underline-offset-2">绝不</span>作为最终疾病诊断和治疗的依据。请以线下实体医院专业医生的诊断为准。
+          {t('result.disclaimerStart')}<span className="font-bold underline decoration-stone-300 underline-offset-2">{t('result.disclaimerBold')}</span>{t('result.disclaimerEnd')}
         </p>
       </motion.div>
 
@@ -124,14 +126,14 @@ export default function ResultPage() {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-[#fffdf7] rounded-[32px] p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-[#f5ebc3] mt-8 transition-all hover:shadow-md">
           <h3 className="font-serif font-medium text-xl text-yellow-900 mb-2 flex items-center gap-2">
             <Save size={20} className="text-yellow-600" /> 
-            添加补充说明 (长期记忆录入)
+            {t('result.addNote')}
           </h3>
-          <p className="text-sm text-yellow-800/70 mb-6 leading-relaxed">您可以记录下目前的用药情况、老人的自觉感受等。这将被 AI 记住并在下次解读中参考趋势。</p>
+          <p className="text-sm text-yellow-800/70 mb-6 leading-relaxed">{t('result.noteDesc')}</p>
           <div className="flex flex-col sm:flex-row gap-3">
             <input 
               type="text" 
               id="noteInput"
-              placeholder="例如：这周开始每天吃半片降压药，感觉头晕有所缓解" 
+              placeholder={t('result.notePlaceholder')} 
               className="flex-grow px-5 py-3.5 rounded-full border border-yellow-200/60 outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 bg-white transition shadow-sm text-stone-700"
             />
             <button 
@@ -145,18 +147,18 @@ export default function ResultPage() {
                     body: JSON.stringify({ report_id: taskId, content: input.value, family_member_id: result.family_member_id })
                   });
                   if (r.ok) {
-                    toast.success('笔记已安全存入家庭医疗档案');
+                    toast.success(t('result.saveNoteSuccess'));
                     input.value = '';
                   } else {
-                    toast.error('保存记录失败');
+                    toast.error(t('result.saveNoteFailed'));
                   }
                 } catch (e) {
-                   toast.error('网络连接错误');
+                   toast.error(t('result.networkError'));
                 }
               }}
               className="bg-yellow-500 text-white px-8 py-3.5 rounded-full font-medium hover:bg-yellow-600 transition shadow-sm whitespace-nowrap"
             >
-              录入档案
+              {t('result.saveToRecords')}
             </button>
           </div>
         </motion.div>

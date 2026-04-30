@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Share, PlusSquare, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function PWAPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Check if already installed
@@ -64,21 +66,21 @@ export default function PWAPrompt() {
           <img src="/pwa-192x192.png" alt="App Icon" className="w-8 h-8 opacity-80" onError={(e) => (e.currentTarget.style.display = 'none')} />
         </div>
         <div>
-          <h3 className="font-semibold text-stone-800 text-sm mb-1">添加到屏幕以供快速访问</h3>
+          <h3 className="font-semibold text-stone-800 text-sm mb-1">{t('pwa.title')}</h3>
           
           {isIOS ? (
             <p className="text-xs text-stone-500 leading-relaxed">
-              点击底部分享 <Share size={12} className="inline mx-0.5" /> <br/>
-              选择「添加到主屏幕」<PlusSquare size={12} className="inline mx-0.5" />
+              {t('pwa.tapShare')} <Share size={12} className="inline mx-0.5" /> <br/>
+              {t('pwa.addToHome')} <PlusSquare size={12} className="inline mx-0.5" />
             </p>
           ) : (
             <>
-              <p className="text-xs text-stone-500 leading-relaxed mb-2">获取完整的原生应用体验，并支持离线查看报告。</p>
+              <p className="text-xs text-stone-500 leading-relaxed mb-2">{t('pwa.desc')}</p>
               <button 
                 onClick={handleInstallClick}
                 className="bg-[#5A5A40] text-white text-xs px-4 py-1.5 rounded-lg font-medium"
               >
-                免费安装
+                {t('pwa.install')}
               </button>
             </>
           )}

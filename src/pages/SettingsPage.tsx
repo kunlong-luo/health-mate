@@ -5,6 +5,43 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 
+const MODEL_OPTIONS: Record<string, {label: string, value: string}[]> = {
+  gemini: [
+    { label: 'Gemini 2.5 Flash', value: 'gemini-2.5-flash' },
+    { label: 'Gemini 2.5 Pro', value: 'gemini-2.5-pro' },
+    { label: 'Gemini 2.0 Flash', value: 'gemini-2.0-flash' },
+    { label: 'Gemini 2.0 Flash Lite', value: 'gemini-2.0-flash-lite' },
+    { label: 'Gemini 2.0 Pro Experimental', value: 'gemini-2.0-pro-exp' },
+    { label: 'Gemini 1.5 Pro', value: 'gemini-1.5-pro' },
+    { label: 'Gemini 1.5 Flash', value: 'gemini-1.5-flash' }
+  ],
+  deepseek: [
+    { label: 'DeepSeek V3 (Chat)', value: 'deepseek-chat' },
+    { label: 'DeepSeek R1 (Reasoner)', value: 'deepseek-reasoner' }
+  ],
+  tongyi: [
+    { label: 'Qwen Plus', value: 'qwen-plus' },
+    { label: 'Qwen Max', value: 'qwen-max' },
+    { label: 'Qwen Turbo', value: 'qwen-turbo' },
+    { label: 'Qwen Long', value: 'qwen-long' }
+  ],
+  claude: [
+    { label: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet-20241022' },
+    { label: 'Claude 3.5 Haiku', value: 'claude-3-5-haiku-20241022' },
+    { label: 'Claude 3 Opus', value: 'claude-3-opus-20240229' }
+  ],
+  ollama: [
+    { label: 'Qwen 2.5 (7B)', value: 'qwen2.5:7b' },
+    { label: 'Qwen 2.5 (14B)', value: 'qwen2.5:14b' },
+    { label: 'Qwen 2.5 (32B)', value: 'qwen2.5:32b' },
+    { label: 'DeepSeek R1 (8B)', value: 'deepseek-r1:8b' },
+    { label: 'DeepSeek R1 (14B)', value: 'deepseek-r1:14b' },
+    { label: 'DeepSeek R1 (32B)', value: 'deepseek-r1:32b' },
+    { label: 'Llama 3.2 (3B)', value: 'llama3.2' },
+    { label: 'Llama 3.1 (8B)', value: 'llama3.1' }
+  ]
+};
+
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   const [provider, setProvider] = useState("gemini");
@@ -150,7 +187,13 @@ export default function SettingsPage() {
                <label className="block text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2 pl-4">{t('settings.provider')}</label>
                <select 
                  value={provider} 
-                 onChange={e => setProvider(e.target.value)}
+                 onChange={e => {
+                   const newProvider = e.target.value;
+                   setProvider(newProvider);
+                   if (MODEL_OPTIONS[newProvider]) {
+                     setModel(MODEL_OPTIONS[newProvider][0].value);
+                   }
+                 }}
                  className="w-full bg-white border border-[#e5e5dd] rounded-full px-5 py-3.5 text-stone-700 outline-none focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] shadow-sm transition appearance-none cursor-pointer"
                >
                  <option value="gemini">Google Gemini AI</option>
@@ -163,13 +206,33 @@ export default function SettingsPage() {
 
            <div>
              <label className="block text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2 pl-4">{t('settings.modelName')}</label>
-             <input 
-               type="text" 
-               value={model} 
-               onChange={e => setModel(e.target.value)}
-               className="w-full bg-white border border-[#e5e5dd] rounded-full px-5 py-3.5 text-stone-700 outline-none focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] shadow-sm transition"
-               placeholder="qwen2.5:7b / gemini-2.5-flash"
-             />
+             {provider === 'ollama' ? (
+               <div className="relative">
+                 <input 
+                   type="text" 
+                   value={model} 
+                   onChange={e => setModel(e.target.value)}
+                   list="ollama-models"
+                   className="w-full bg-white border border-[#e5e5dd] rounded-full px-5 py-3.5 text-stone-700 outline-none focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] shadow-sm transition"
+                   placeholder="e.g. qwen2.5:7b"
+                 />
+                 <datalist id="ollama-models">
+                   {MODEL_OPTIONS.ollama.map(opt => (
+                     <option key={opt.value} value={opt.value}>{opt.label}</option>
+                   ))}
+                 </datalist>
+               </div>
+             ) : (
+               <select 
+                 value={model} 
+                 onChange={e => setModel(e.target.value)}
+                 className="w-full bg-white border border-[#e5e5dd] rounded-full px-5 py-3.5 text-stone-700 outline-none focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] shadow-sm transition appearance-none cursor-pointer"
+               >
+                 {MODEL_OPTIONS[provider]?.map(opt => (
+                   <option key={opt.value} value={opt.value}>{opt.label}</option>
+                 ))}
+               </select>
+             )}
            </div>
 
            {(provider === "ollama" || provider === "tongyi" || provider === "deepseek") && (

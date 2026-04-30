@@ -7,8 +7,10 @@ import { Calendar, ChevronRight, FileHeart, CloudUpload } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 export default function HistoryPage() {
+  const { t } = useTranslation();
   const { token } = useAuth();
   const navigate = useNavigate();
   const [remoteReports, setRemoteReports] = useState<any[]>([]);
@@ -42,7 +44,7 @@ export default function HistoryPage() {
   }, [token]);
 
   const handleMigrate = async () => {
-    if (!selectedMemberForMigration) return toast.error('请选择归属成员');
+    if (!selectedMemberForMigration) return toast.error(t('history.chooseMember'));
     setIsMigrating(true);
     try {
       const res = await apiFetch('/api/migrate/from_indexeddb', {
@@ -51,17 +53,17 @@ export default function HistoryPage() {
         body: JSON.stringify({ reports: localReports, family_member_id: selectedMemberForMigration })
       });
       if (res.ok) {
-        toast.success('历史记录同步成功！');
+        toast.success(t('history.syncSuccess'));
         await db.reports.clear();
         setShowMigrateModal(false);
         // refresh history
         const resReports = await apiFetch('/api/reports/history', { headers: { Authorization: `Bearer ${token}` } });
         if (resReports.ok) setRemoteReports(await resReports.json());
       } else {
-        toast.error('同步失败');
+        toast.error(t('history.syncFailed'));
       }
     } catch (e) {
-      toast.error('网络错误');
+      toast.error(t('history.networkError'));
     }
     setIsMigrating(false);
   };
@@ -82,19 +84,19 @@ export default function HistoryPage() {
         <div className="w-10 h-10 rounded-full bg-[#f7f7f3] text-[#5a5a35] flex items-center justify-center">
            <FileHeart size={20} />
         </div>
-        {token ? '全家历史解读' : '本地历史解读'}
+        {token ? t('history.titleRemote') : t('history.titleLocal')}
       </h2>
 
       {token && localReports && localReports.length > 0 && (
         <div className="bg-[#f7f7f3] border border-[#e5e5dd] p-6 rounded-[24px] mb-8 flex flex-col md:flex-row items-center justify-between gap-4 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
           <div>
             <h3 className="font-medium text-[#5a5a35] flex items-center gap-2 text-lg">
-              <CloudUpload size={20} /> 发现 {localReports.length} 份本地未同步报告
+              <CloudUpload size={20} /> {t('history.foundUnsynced', { count: localReports.length })}
             </h3>
-            <p className="text-sm text-stone-500 mt-1">您可以将它们分配给某位家人，实现跨设备趋势分析。</p>
+            <p className="text-sm text-stone-500 mt-1">{t('history.syncDesc')}</p>
           </div>
           <button onClick={() => setShowMigrateModal(true)} className="px-6 py-2.5 bg-[#5a5a35] hover:bg-[#4a4a2e] text-white rounded-full text-sm font-medium whitespace-nowrap transition shadow-sm">
-            立即同步
+            {t('history.syncNow')}
           </button>
         </div>
       )}
@@ -102,23 +104,23 @@ export default function HistoryPage() {
       {showMigrateModal && (
         <div className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-[#fdfdfa] rounded-[32px] p-8 w-full max-w-sm shadow-2xl animate-in zoom-in-95 duration-200">
-            <h3 className="font-serif font-medium text-xl mb-6 text-center text-stone-800">把这些报告归属于谁？</h3>
+            <h3 className="font-serif font-medium text-xl mb-6 text-center text-stone-800">{t('history.assignToWhom')}</h3>
             <select 
               value={selectedMemberForMigration} 
               onChange={e => setSelectedMemberForMigration(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-[#e5e5dd] bg-white text-stone-700 outline-none focus:ring-2 focus:ring-[#5a5a35]/30 mb-8 cursor-pointer"
             >
               {members.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
-              {members.length === 0 && <option value="">请先到家人页面添加</option>}
+              {members.length === 0 && <option value="">{t('history.addFamilyFirst')}</option>}
             </select>
             <div className="flex gap-3">
-              <button onClick={() => setShowMigrateModal(false)} className="px-5 py-3 text-stone-500 font-medium hover:text-stone-800 bg-stone-100/50 hover:bg-stone-100 rounded-full flex-1 transition">取消</button>
+              <button onClick={() => setShowMigrateModal(false)} className="px-5 py-3 text-stone-500 font-medium hover:text-stone-800 bg-stone-100/50 hover:bg-stone-100 rounded-full flex-1 transition">{t('history.cancel')}</button>
               <button 
                  onClick={handleMigrate} 
                  disabled={isMigrating || members.length === 0}
                  className="px-5 py-3 bg-[#5a5a35] text-white font-medium hover:bg-[#4a4a2e] rounded-full flex-1 disabled:opacity-50 transition shadow-sm"
               >
-                {isMigrating ? '同步中...' : '确认同步'}
+                {isMigrating ? t('history.syncing') : t('history.confirmSync')}
               </button>
             </div>
           </div>
@@ -142,8 +144,8 @@ export default function HistoryPage() {
            <div className="w-20 h-20 bg-[#f7f7f3] rounded-full flex items-center justify-center mx-auto mb-6">
              <FileHeart size={32} className="text-[#a8a86c]" />
            </div>
-           <p className="text-stone-600 font-serif text-xl">暂时没有历史记录</p>
-           {!token && <p className="text-stone-400 text-sm mt-2">登录后可查看云端家人档案与关联记录</p>}
+           <p className="text-stone-600 font-serif text-xl">{t('history.noHistory')}</p>
+           {!token && <p className="text-stone-400 text-sm mt-2">{t('history.loginToView')}</p>}
         </div>
       ) : (
         <div className="space-y-4">
@@ -160,7 +162,7 @@ export default function HistoryPage() {
                 </div>
                 <h3 className="text-stone-800 font-medium text-lg line-clamp-1 pr-6 leading-relaxed">
                   {report.result?.summary ? report.result.summary.substring(0, 30) + "..." : 
-                   report.interpretation_json ? safeParseJSON(report.interpretation_json).summary?.substring(0, 30) + "..." : "化验单解读结果"}
+                   report.interpretation_json ? safeParseJSON(report.interpretation_json).summary?.substring(0, 30) + "..." : t('history.reportResult')}
                 </h3>
               </div>
               <div className="w-10 h-10 shrink-0 rounded-full bg-[#f7f7f3] border border-[#e5e5dd] text-stone-400 flex items-center justify-center group-hover:bg-[#5a5a35] group-hover:border-[#5a5a35] group-hover:text-white transition">

@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import { Loader2, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function VerifyPage() {
   const [searchParams] = useSearchParams();
@@ -16,11 +17,12 @@ export default function VerifyPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const verifyAttempted = useRef(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!token || !purpose || !email) {
       setStatus('error');
-      setErrorMsg('无效的链接');
+      setErrorMsg(t('verify.invalidLink'));
       return;
     }
     
@@ -43,41 +45,41 @@ export default function VerifyPage() {
             navigate(`/auth/reset-password?session=${data.reset_session_token}`, { replace: true });
           } else {
             login(data.token, data.user);
-            toast.success('登录成功');
+            toast.success(t('verify.loginSuccess'));
             setTimeout(() => navigate('/family'), 1500);
           }
         } else {
           setStatus('error');
-          setErrorMsg(data.error || '验证失败或链接已过期');
+          setErrorMsg(data.error || t('verify.verifyFailed'));
         }
       } catch (e) {
         setStatus('error');
-        setErrorMsg('网络错误，请稍后再试');
+        setErrorMsg(t('verify.networkError'));
       }
     };
 
     verifyToken();
-  }, [token, purpose, email, login, navigate]);
+  }, [token, purpose, email, login, navigate, t]);
 
   return (
     <div className="flex justify-center flex-col items-center h-[calc(100vh-100px)] px-4 text-center">
       {status === 'loading' && (
         <div className="flex flex-col items-center gap-4 animate-in fade-in">
           <Loader2 className="animate-spin text-[#111827]" size={40} />
-          <p className="text-stone-600 font-medium">正在验证您的链接...</p>
+          <p className="text-stone-600 font-medium">{t('verify.verifying')}</p>
         </div>
       )}
       
       {status === 'error' && (
         <div className="bg-red-50 p-6 rounded-2xl border border-red-100 flex flex-col items-center max-w-sm w-full animate-in zoom-in-95">
           <AlertCircle className="text-red-500 mb-3" size={40} />
-          <h3 className="text-lg font-medium text-red-800 mb-1">验证失败</h3>
+          <h3 className="text-lg font-medium text-red-800 mb-1">{t('verify.failedTitle')}</h3>
           <p className="text-red-600 text-sm mb-6">{errorMsg}</p>
           <button 
             onClick={() => navigate('/login')}
             className="w-full py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition"
           >
-            返回登录页重新获取
+            {t('verify.backToLogin')}
           </button>
         </div>
       )}
@@ -87,8 +89,8 @@ export default function VerifyPage() {
           <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
             ✔
           </div>
-          <p className="text-stone-800 font-medium text-lg">验证通过！</p>
-          {purpose !== 'reset' && <p className="text-stone-500 text-sm">正在为您跳转...</p>}
+          <p className="text-stone-800 font-medium text-lg">{t('verify.successTitle')}</p>
+          {purpose !== 'reset' && <p className="text-stone-500 text-sm">{t('verify.redirecting')}</p>}
         </div>
       )}
     </div>

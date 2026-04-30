@@ -4,6 +4,7 @@ import { Drawer } from "vaul";
 import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 export default function ChatDrawer() {
   const { token, user } = useAuth();
@@ -12,6 +13,7 @@ export default function ChatDrawer() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (open && messagesEndRef.current) {
@@ -57,7 +59,7 @@ export default function ChatDrawer() {
             });
 
             if (aiFullText.includes("[EMERGENCY_TRIGGER]")) {
-                aiFullText = "⚠️ 发现紧急危险症状！建议您立即拨打 120 或立刻前往最近医院急诊科！";
+                aiFullText = t('chat.emergencyAlert');
                 setMessages(prev => {
                     const updated = [...prev];
                     updated[updated.length - 1].content = aiFullText;
@@ -67,7 +69,7 @@ export default function ChatDrawer() {
             }
         }
     } catch (e) {
-        setMessages(prev => [...prev, { role: 'assistant', content: "网络出错了，请稍后再试。" }]);
+        setMessages(prev => [...prev, { role: 'assistant', content: t('chat.networkError') }]);
     }
     setLoading(false);
   };
@@ -90,7 +92,7 @@ export default function ChatDrawer() {
             <div className="p-4 bg-white rounded-t-[32px] border-b border-stone-100 flex items-center justify-between sticky top-0 shrink-0">
               <div className="flex items-center gap-2 text-stone-800">
                 <Bot size={20} className="text-[#5A5A40]" />
-                <span className="font-medium">AI 医疗助手</span>
+                <span className="font-medium">{t('chat.aiAssistant')}</span>
               </div>
               <button onClick={() => setOpen(false)} className="p-2 text-stone-400 hover:text-stone-600 bg-stone-50 rounded-full">
                 <X size={18} />
@@ -99,10 +101,10 @@ export default function ChatDrawer() {
             
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 && (
-                 <div className="text-center text-sm text-stone-400 mt-10">
-                   您好，{user?.name}！我是您的家庭健康助手。<br/>
-                   我可以帮您解读报告、查用药冲突、或解答健康疑问。
-                 </div>
+                 <div 
+                   className="text-center text-sm text-stone-400 mt-10" 
+                   dangerouslySetInnerHTML={{__html: t('chat.greeting').replace('{{name}}', user?.name || '')}} 
+                 />
               )}
               {messages.map((msg, idx) => (
                 <div key={idx} className={clsx("flex gap-3", msg.role === 'user' ? "flex-row-reverse" : "")}>
@@ -139,7 +141,7 @@ export default function ChatDrawer() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSend()}
-                  placeholder="问点什么..."
+                  placeholder={t('chat.placeholder')}
                   className="flex-1 bg-stone-50 border-none outline-none px-4 py-3 rounded-xl focus:ring-1 focus:ring-[#5A5A40]"
                 />
                 <button 

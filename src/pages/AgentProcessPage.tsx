@@ -5,6 +5,7 @@ import { createParser } from "eventsource-parser";
 import { CheckCircle2, Loader2, Wrench, BrainCircuit } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from 'react-i18next';
 
 interface AgentEvent {
   type: "step_start" | "tool_call" | "tool_result" | "step_complete" | "thinking" | "final" | "error";
@@ -17,6 +18,7 @@ export default function AgentProcessPage() {
   const { token } = useAuth();
   const [events, setEvents] = useState<AgentEvent[]>([]);
   const [isFinished, setIsFinished] = useState(false);
+  const { t } = useTranslation();
 
   const verifyAttempted = useRef(false);
 
@@ -99,7 +101,7 @@ export default function AgentProcessPage() {
     return (
       <div className="text-center mt-8">
          <button onClick={() => navigate('/')} className="bg-stone-800 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-stone-700 transition">
-           返回首页
+           {t('agent.backHome')}
          </button>
       </div>
     );
@@ -109,10 +111,10 @@ export default function AgentProcessPage() {
     <div className="max-w-xl mx-auto py-8">
       <div className="mb-8 text-center space-y-2">
         <h2 className="font-serif text-2xl font-medium text-stone-800">
-          AI 正在思考...
+          {t('agent.thinking')}
         </h2>
         <p className="text-stone-500 text-sm">
-          HealthMate 正在为您深度分析这份化验单
+          {t('agent.subtitle')}
         </p>
       </div>
 
@@ -120,7 +122,7 @@ export default function AgentProcessPage() {
         <div className="space-y-6">
           <AnimatePresence>
             {events.filter((evt, i, arr) => evt.type !== 'error' || arr.findIndex(e => e.type === 'error') === i).map((evt, idx) => (
-              <EventRow key={idx} event={evt} isLast={idx === events.length - 1} />
+              <EventRow key={idx} event={evt} isLast={idx === events.length - 1} t={t} />
             ))}
           </AnimatePresence>
           
@@ -131,7 +133,7 @@ export default function AgentProcessPage() {
                className="flex items-center gap-3 text-stone-400 mt-4"
             >
               <Loader2 size={16} className="animate-spin" />
-              <span className="text-sm font-medium">深入推演中...</span>
+              <span className="text-sm font-medium">{t('agent.reasoning')}</span>
             </motion.div>
           )}
         </div>
@@ -142,7 +144,7 @@ export default function AgentProcessPage() {
   );
 }
 
-function EventRow({ event, isLast }: { event: AgentEvent, isLast: boolean }) {
+function EventRow({ event, isLast, t }: { event: AgentEvent, isLast: boolean, t: any }) {
   if (event.type === "step_start") {
     return (
       <motion.div 
@@ -169,7 +171,7 @@ function EventRow({ event, isLast }: { event: AgentEvent, isLast: boolean }) {
         className="flex items-center gap-3 ml-11 py-2 text-sm text-[#5A5A40] bg-[#5A5A40]/5 rounded-xl px-4 w-fit"
       >
         <Wrench size={14} />
-        <span>调用专业工具: <span className="font-mono text-xs">{event.data.tool_name}</span></span>
+        <span>{t('agent.toolCall')} <span className="font-mono text-xs">{event.data.tool_name}</span></span>
         {isLast && <Loader2 size={12} className="animate-spin ml-2" />}
       </motion.div>
     );
@@ -200,7 +202,7 @@ function EventRow({ event, isLast }: { event: AgentEvent, isLast: boolean }) {
            animate={{ opacity: 1 }}
            transition={{ duration: 0.5 }}
         >
-          {event.data.text || "正在整理思路..."}
+          {event.data.text || t('agent.thinkingText')}
         </motion.span>
       </motion.div>
     );
@@ -217,8 +219,8 @@ function EventRow({ event, isLast }: { event: AgentEvent, isLast: boolean }) {
           <Wrench size={20} />
         </div>
         <div>
-          <p className="font-medium text-lg">分析中断</p>
-          <p className="text-red-500/80 text-sm">{event.data?.message || "发生了未知错误，请重试"}</p>
+          <p className="font-medium text-lg">{t('agent.errorTitle')}</p>
+          <p className="text-red-500/80 text-sm">{event.data?.message || t('agent.errorDesc')}</p>
         </div>
       </motion.div>
     );
@@ -235,8 +237,8 @@ function EventRow({ event, isLast }: { event: AgentEvent, isLast: boolean }) {
           <CheckCircle2 size={20} />
         </div>
         <div>
-          <p className="text-stone-800 font-medium text-lg">解读完成</p>
-          <p className="text-stone-500 text-sm">正在为您生成专属报告...</p>
+          <p className="text-stone-800 font-medium text-lg">{t('agent.completeTitle')}</p>
+          <p className="text-stone-500 text-sm">{t('agent.completeDesc')}</p>
         </div>
       </motion.div>
     );
