@@ -5,12 +5,14 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner';
 import { Mail, ArrowRight, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import LegalModal from '../components/LegalModal';
 
 export default function LoginPage() {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   
   const [step, setStep] = useState<'email' | 'login' | 'register' | 'check_email'>('email');
   const [loading, setLoading] = useState(false);
@@ -233,7 +235,16 @@ export default function LoginPage() {
             </div>
           </div>
         )}
+
+        <div className="mt-8 text-center text-xs text-stone-500">
+          {t('legal.agreementText')}{' '}
+          <button onClick={() => setIsLegalModalOpen(true)} className="text-stone-700 hover:text-stone-900 font-medium underline underline-offset-2">
+            {t('legal.terms')} {t('legal.and')} {t('legal.privacy')}
+          </button>
+        </div>
       </div>
+
+      <LegalModal isOpen={isLegalModalOpen} onClose={() => setIsLegalModalOpen(false)} />
     </div>
   );
 }

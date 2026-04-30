@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import LegalModal from "../components/LegalModal";
 
 const MODEL_OPTIONS: Record<string, {label: string, value: string}[]> = {
   gemini: [
@@ -51,6 +52,7 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState<any>(null);
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
@@ -302,6 +304,17 @@ export default function SettingsPage() {
       >
         {t('settings.logout')}
       </button>
+
+      <div className="text-center mt-6">
+        <button 
+          onClick={() => setIsLegalModalOpen(true)} 
+          className="text-xs text-stone-400 hover:text-stone-600 font-medium underline underline-offset-2 transition-colors"
+        >
+          {t('legal.terms')} {t('legal.and')} {t('legal.privacy')}
+        </button>
+      </div>
+
+      <LegalModal isOpen={isLegalModalOpen} onClose={() => setIsLegalModalOpen(false)} />
     </div>
   );
 }
