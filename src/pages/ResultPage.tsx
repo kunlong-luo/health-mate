@@ -9,6 +9,7 @@ import { ResultBanner } from "../components/result/ResultBanner";
 import { ResultAnomalies } from "../components/result/ResultAnomalies";
 import { ResultActions } from "../components/result/ResultActions";
 import { motion } from "framer-motion";
+import Markdown from 'react-markdown';
 
 export default function ResultPage() {
   const { taskId } = useParams();
@@ -97,7 +98,9 @@ export default function ResultPage() {
           </div>
           <div className="text-stone-700 leading-[1.8] text-lg font-serif">
             {/* Displaying summary directly as requested */}
-            {result.summary}
+            <div className="markdown-body">
+              <Markdown>{result.summary}</Markdown>
+            </div>
           </div>
         </div>
       </motion.div>

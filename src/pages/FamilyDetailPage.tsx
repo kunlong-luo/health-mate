@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import dayjs from 'dayjs';
-import { ArrowLeft, FileText, StickyNote, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, FileText, StickyNote, AlertTriangle, Edit2, Trash2 } from 'lucide-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { EmergencyDialog } from '../components/family/EmergencyDialog';
 import { TrendChart } from '../components/family/TrendChart';
+import { toast } from 'sonner';
 
 export default function FamilyDetailPage() {
   const { id } = useParams();
@@ -16,6 +17,10 @@ export default function FamilyDetailPage() {
   const [trendData, setTrendData] = useState<any[]>([]);
   const [selectedIndicator, setSelectedIndicator] = useState('ALT');
   const [showEmergency, setShowEmergency] = useState(false);
+  
+  // Edit State
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', gender: '男', birth_year: 1960 });
 
   useEffect(() => {
     if (!token) {
@@ -31,7 +36,15 @@ export default function FamilyDetailPage() {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (res.ok) {
-      setData(await res.json());
+      const memberData = await res.json();
+      setData(memberData);
+      setEditForm({
+        name: memberData.name,
+        gender: memberData.gender,
+        birth_year: memberData.birth_year
+      });
+    } else {
+      navigate('/family'); // Not found or error
     }
   };
 
@@ -50,6 +63,49 @@ export default function FamilyDetailPage() {
     }
   };
 
+  const handleUpdate = async () => {
+    if (!editForm.name) return toast.error('请输入称呼');
+    const res = await apiFetch(`/api/family/${id}`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}` 
+      },
+      body: JSON.stringify({
+        ...editForm,
+        conditions: data.conditions, // keep existing as parse/stringify logic handles it
+        allergies: data.allergies,
+        avatar_emoji: data.avatar_emoji
+      })
+    });
+    
+    if (res.ok) {
+      toast.success('更新成功');
+      setIsEditing(false);
+      fetchDetail();
+    } else {
+      toast.error('更新失败');
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm('确定要删除这位家人吗？相关的化验单和笔记都会被删除且无法恢复。')) {
+      return;
+    }
+    const res = await apiFetch(`/api/family/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    // Also delete local reports from IndexedDB if applicable, though primarily rely on remote DB for now
+    if (res.ok) {
+      toast.success('已删除');
+      navigate('/family');
+    } else {
+      toast.error('删除失败');
+    }
+  };
+
   if (!data) return <div className="text-center py-12">加载中...</div>;
 
   return (
@@ -65,27 +121,75 @@ export default function FamilyDetailPage() {
 
       {showEmergency && <EmergencyDialog onClose={() => setShowEmergency(false)} />}
 
-      <div className="bg-[#fdfdfa] p-8 md:p-10 rounded-[32px] shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-[#e5e5dd] flex flex-col md:flex-row items-center md:items-start gap-8 mb-10 text-center md:text-left transition-all">
-        <div className="w-24 h-24 bg-[#f7f7f3] border border-[#e5e5dd] rounded-full flex items-center justify-center text-4xl shadow-inner shrink-0">
-          {data.avatar_emoji || '👤'}
-        </div>
-        <div className="flex-1">
-          <h1 className="text-4xl font-serif font-medium text-stone-800 mb-2 tracking-tight">{data.name}</h1>
-          <p className="text-stone-500 text-sm font-medium tracking-wide uppercase">
-            {data.gender} <span className="mx-2 opacity-50">·</span> {data.birth_year} 年生人
-          </p>
-          {(data.conditions || data.allergies) && (
-            <div className="mt-5 flex flex-wrap justify-center md:justify-start gap-2 text-[11px] font-bold uppercase tracking-wider">
-              {data.conditions && JSON.parse(data.conditions).map((c: string) => (
-                 <span key={c} className="px-3 py-1.5 bg-red-50 text-red-600 border border-red-100 rounded-full shadow-sm">{c}</span>
-              ))}
-              {data.allergies && (
-                 <span className="px-3 py-1.5 bg-amber-50 text-amber-600 border border-amber-100 rounded-full shadow-sm">过敏: {data.allergies}</span>
-              )}
+      {isEditing ? (
+        <div className="bg-[#fdfdfa] p-8 md:p-10 rounded-[32px] shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-[#e5e5dd] mb-10 transition-all">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-serif font-medium text-stone-800">编辑档案</h2>
+            <button onClick={handleDelete} className="text-red-500 hover:bg-red-50 px-3 py-1.5 rounded-full text-sm font-medium transition flex items-center gap-1.5">
+              <Trash2 size={16} /> 删除此档案
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="space-y-2">
+              <label className="text-xs text-stone-500 font-medium uppercase tracking-wider block">家人称谓</label>
+              <input 
+                type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})}
+                className="w-full px-4 py-2.5 bg-white border border-[#e5e5dd] focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] rounded-xl outline-none transition" placeholder="如：爸爸、妈妈"
+              />
             </div>
-          )}
+            <div className="space-y-2">
+              <label className="text-xs text-stone-500 font-medium uppercase tracking-wider block">性别</label>
+              <select 
+                value={editForm.gender} onChange={e => setEditForm({...editForm, gender: e.target.value})}
+                className="w-full px-4 py-2.5 bg-white border border-[#e5e5dd] focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] rounded-xl outline-none transition cursor-pointer"
+              >
+                <option>男</option>
+                <option>女</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs text-stone-500 font-medium uppercase tracking-wider block">出生年份</label>
+              <input 
+                type="number" value={editForm.birth_year} onChange={e => setEditForm({...editForm, birth_year: parseInt(e.target.value)})}
+                className="w-full px-4 py-2.5 bg-white border border-[#e5e5dd] focus:border-[#5a5a35] focus:ring-1 focus:ring-[#5a5a35] rounded-xl outline-none transition"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-3 pt-4 border-t border-[#e5e5dd]">
+            <button onClick={() => setIsEditing(false)} className="px-6 py-2.5 text-stone-500 hover:text-stone-800 font-medium transition rounded-full hover:bg-stone-100">取消</button>
+            <button onClick={handleUpdate} className="px-8 py-2.5 bg-[#5a5a35] text-white rounded-full font-medium hover:bg-[#4a4a2e] transition shadow-sm">保存修改</button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-[#fdfdfa] p-8 md:p-10 rounded-[32px] shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-[#e5e5dd] flex flex-col md:flex-row items-center md:items-start gap-8 mb-10 text-center md:text-left transition-all relative group">
+          <button 
+            onClick={() => setIsEditing(true)}
+            className="absolute top-6 right-6 p-2 rounded-full text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition opacity-0 group-hover:opacity-100"
+            title="编辑资料"
+          >
+            <Edit2 size={18} />
+          </button>
+          <div className="w-24 h-24 bg-[#f7f7f3] border border-[#e5e5dd] rounded-full flex items-center justify-center text-4xl shadow-inner shrink-0">
+            {data.avatar_emoji || '👤'}
+          </div>
+          <div className="flex-1">
+            <h1 className="text-4xl font-serif font-medium text-stone-800 mb-2 tracking-tight">{data.name}</h1>
+            <p className="text-stone-500 text-sm font-medium tracking-wide uppercase">
+              {data.gender} <span className="mx-2 opacity-50">·</span> {data.birth_year} 年生人
+            </p>
+            {(data.conditions || data.allergies) && (
+              <div className="mt-5 flex flex-wrap justify-center md:justify-start gap-2 text-[11px] font-bold uppercase tracking-wider">
+                {data.conditions && typeof data.conditions === 'string' && JSON.parse(data.conditions).map((c: string) => (
+                   <span key={c} className="px-3 py-1.5 bg-red-50 text-red-600 border border-red-100 rounded-full shadow-sm">{c}</span>
+                ))}
+                {data.allergies && (
+                   <span className="px-3 py-1.5 bg-amber-50 text-amber-600 border border-amber-100 rounded-full shadow-sm">过敏: {data.allergies}</span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <Tabs.Root defaultValue="trends" className="flex flex-col">
         <Tabs.List className="flex border-b border-[#e5e5dd] mb-8 overflow-x-auto hide-scrollbar">

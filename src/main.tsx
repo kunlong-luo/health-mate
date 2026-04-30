@@ -5,18 +5,14 @@ import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import './index.css';
 import './lib/i18n';
-import { registerSW } from 'virtual:pwa-register';
 
-// Register service worker for PWA
-const updateSW = registerSW({
-  onNeedRefresh() {
-    // We could show a toast here to inform user to refresh for new version
-    console.log('New content available, please refresh.');
-  },
-  onOfflineReady() {
-    console.log('App ready to work offline');
-  },
-});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) {
+      registration.unregister();
+    }
+  });
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

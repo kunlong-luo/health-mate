@@ -49,6 +49,11 @@ router.put('/:id', (req: any, res) => {
 });
 
 router.delete('/:id', (req: any, res) => {
+  db.prepare('DELETE FROM indicators WHERE family_member_id = ?').run(req.params.id);
+  db.prepare('DELETE FROM reports WHERE family_member_id = ?').run(req.params.id);
+  db.prepare('DELETE FROM notes WHERE family_member_id = ?').run(req.params.id);
+  db.prepare('DELETE FROM medications WHERE family_member_id = ?').run(req.params.id);
+  db.prepare('DELETE FROM visits WHERE family_member_id = ?').run(req.params.id);
   db.prepare('DELETE FROM family_members WHERE id = ? AND user_id = ?').run(req.params.id, req.userId);
   res.json({ success: true });
 });
