@@ -1,3 +1,4 @@
+import { apiFetch } from '../../lib/api';
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -12,7 +13,7 @@ export function CareReminders() {
     queryKey: ['care-reminders'],
     queryFn: async () => {
       if (!token) return [];
-      const res = await fetch('/api/care-reminders', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await apiFetch('/api/care-reminders', { headers: { Authorization: `Bearer ${token}` } });
       return res.json();
     },
     enabled: !!token
@@ -20,7 +21,7 @@ export function CareReminders() {
 
   const handleReminderAction = async (id: string, actionType: string, url_path: string) => {
     // mark as handled
-    await fetch(`/api/care-reminders/${id}/handle`, {
+    await apiFetch(`/api/care-reminders/${id}/handle`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` }
     });

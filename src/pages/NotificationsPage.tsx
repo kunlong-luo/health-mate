@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 import { Bell, FileText, Activity, AlertTriangle, CheckCircle, ChevronRight } from "lucide-react";
@@ -11,7 +12,7 @@ export default function NotificationsPage() {
     queryKey: ['notifications'],
     queryFn: async () => {
       if (!token) return [];
-      const res = await fetch('/api/notifications', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await apiFetch('/api/notifications', { headers: { Authorization: `Bearer ${token}` } });
       return res.json();
     },
     enabled: !!token
@@ -19,7 +20,7 @@ export default function NotificationsPage() {
 
   const handleRead = async (id: string, is_read: number) => {
     if (is_read) return;
-    await fetch(`/api/notifications/${id}/read`, {
+    await apiFetch(`/api/notifications/${id}/read`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` }
     });

@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../lib/db";
@@ -15,14 +16,16 @@ export default function HistoryPage() {
   const [isMigrating, setIsMigrating] = useState(false);
   const [showMigrateModal, setShowMigrateModal] = useState(false);
   const [selectedMemberForMigration, setSelectedMemberForMigration] = useState("");
+  const [isLoadingHistory, setIsLoadingHistory] = useState(!!token);
 
   const localReports = useLiveQuery(() => db.reports.orderBy('createdAt').reverse().toArray());
 
   useEffect(() => {
     if (token) {
+      setIsLoadingHistory(true);
       Promise.all([
-        fetch('/api/reports/history', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/family', { headers: { Authorization: `Bearer ${token}` } })
+        apiFetch('/api/reports/history', { headers: { Authorization: `Bearer ${token}` } }),
+        apiFetch('/api/family', { headers: { Authorization: `Bearer ${token}` } })
       ])
       .then(async ([resReports, resFamily]) => {
         if (resReports.ok) setRemoteReports(await resReports.json());
@@ -31,6 +34,9 @@ export default function HistoryPage() {
            setMembers(family);
            if (family.length > 0) setSelectedMemberForMigration(family[0].id);
         }
+      })
+      .finally(() => {
+        setIsLoadingHistory(false);
       });
     }
   }, [token]);
@@ -39,7 +45,7 @@ export default function HistoryPage() {
     if (!selectedMemberForMigration) return toast.error('请选择归属成员');
     setIsMigrating(true);
     try {
-      const res = await fetch('/api/migrate/from_indexeddb', {
+      const res = await apiFetch('/api/migrate/from_indexeddb', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ reports: localReports, family_member_id: selectedMemberForMigration })
@@ -49,7 +55,7 @@ export default function HistoryPage() {
         await db.reports.clear();
         setShowMigrateModal(false);
         // refresh history
-        const resReports = await fetch('/api/reports/history', { headers: { Authorization: `Bearer ${token}` } });
+        const resReports = await apiFetch('/api/reports/history', { headers: { Authorization: `Bearer ${token}` } });
         if (resReports.ok) setRemoteReports(await resReports.json());
       } else {
         toast.error('同步失败');
@@ -119,8 +125,18 @@ export default function HistoryPage() {
         </div>
       )}
 
-      {!displayReports ? (
-        <div className="text-stone-400 text-sm text-center py-12">加载中...</div>
+      {(isLoadingHistory || (!token && localReports === undefined)) ? (
+        <div className="space-y-4">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="bg-white p-6 rounded-[24px] shadow-sm border border-[#e5e5dd] flex items-center justify-between animate-pulse">
+              <div>
+                <div className="h-4 w-32 bg-stone-200 rounded-full mb-3"></div>
+                <div className="h-6 w-64 bg-stone-200 rounded-md"></div>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-stone-100"></div>
+            </div>
+          ))}
+        </div>
       ) : displayReports.length === 0 ? (
         <div className="text-center py-24 bg-[#fdfdfa] rounded-[32px] border border-[#e5e5dd] shadow-sm">
            <div className="w-20 h-20 bg-[#f7f7f3] rounded-full flex items-center justify-center mx-auto mb-6">

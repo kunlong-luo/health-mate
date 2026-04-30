@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, History, Settings, HeartPulse, Users, LogOut, LogIn, Activity, Pill, Bell } from "lucide-react";
 import clsx from "clsx";
@@ -17,7 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     queryFn: async () => {
       if (!token) return 0;
       try {
-        const res = await fetch('/api/notifications/unread-count', { headers: { Authorization: `Bearer ${token}` } });
+        const res = await apiFetch('/api/notifications/unread-count', { headers: { Authorization: `Bearer ${token}` } });
         if (!res.ok) return 0;
         const data = await res.json();
         return data?.count ?? 0;

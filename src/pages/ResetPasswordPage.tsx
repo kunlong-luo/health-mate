@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -18,7 +19,7 @@ export default function ResetPasswordPage() {
     if (!email) return toast.error('请输入邮箱');
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/magic-link/request', {
+      const res = await apiFetch('/api/auth/magic-link/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, purpose: 'reset' }),
@@ -40,7 +41,7 @@ export default function ResetPasswordPage() {
     if (password.length < 8) return toast.error('密码至少 8 位');
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/password-reset/confirm', {
+      const res = await apiFetch('/api/auth/password-reset/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reset_session_token: sessionToken, new_password: password }),

@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -12,7 +13,7 @@ export default function MedicationsPage() {
   const { data: meds = [] } = useQuery({
     queryKey: ['medications'],
     queryFn: async () => {
-      const res = await fetch('/api/medications', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await apiFetch('/api/medications', { headers: { Authorization: `Bearer ${token}` } });
       return res.json();
     },
     enabled: !!token
@@ -26,7 +27,7 @@ export default function MedicationsPage() {
     setWarnings([]);
     try {
       const allDrugNames = meds.map((m: any) => m.name);
-      const res = await fetch('/api/chat/stream', {
+      const res = await apiFetch('/api/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({
@@ -87,7 +88,7 @@ export default function MedicationsPage() {
                </div>
                {m.instructions && <div className="text-sm text-stone-500 mb-2">说明: {m.instructions}</div>}
                <button onClick={async () => {
-                  await fetch(`/api/medications/${m.id}`, {
+                  await apiFetch(`/api/medications/${m.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                     body: JSON.stringify({ active: 0 })

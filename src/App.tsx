@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Layout from "./components/Layout";
 import PWAPrompt from "./components/PWAPrompt";
 
-const HomePage = React.lazy(() => import("./pages/HomePage"));
+import HomePage from "./pages/HomePage";
 const AgentProcessPage = React.lazy(() => import("./pages/AgentProcessPage"));
 const ResultPage = React.lazy(() => import("./pages/ResultPage"));
 const HistoryPage = React.lazy(() => import("./pages/HistoryPage"));

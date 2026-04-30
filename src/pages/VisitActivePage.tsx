@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -64,7 +65,7 @@ export default function VisitActivePage() {
   const { data: visit, refetch } = useQuery({
     queryKey: ['visit', id],
     queryFn: async () => {
-      const res = await fetch(`/api/visits/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await apiFetch(`/api/visits/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       return res.json();
     },
     enabled: !!token && !!id
@@ -76,7 +77,7 @@ export default function VisitActivePage() {
     recognitionRef.current?.stop();
     toast.info("正在智能整理并提取医嘱...");
     try {
-      await fetch(`/api/visits/${id}/notes`, {
+      await apiFetch(`/api/visits/${id}/notes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ content: note })

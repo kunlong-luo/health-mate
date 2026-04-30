@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -19,7 +20,7 @@ export default function LoginPage() {
     if (!email || !email.includes('@')) return toast.error('请输入有效的邮箱');
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/check-email', {
+      const res = await apiFetch('/api/auth/check-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -41,7 +42,7 @@ export default function LoginPage() {
     if (!password) return toast.error('请输入密码');
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await apiFetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -66,7 +67,7 @@ export default function LoginPage() {
     if (password.length < 8) return toast.error('密码至少8位');
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await apiFetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name }),
@@ -86,7 +87,7 @@ export default function LoginPage() {
   const handleMagicLink = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/magic-link/request', {
+      const res = await apiFetch('/api/auth/magic-link/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, purpose: 'login' }),

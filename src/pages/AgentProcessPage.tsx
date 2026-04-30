@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { createParser } from "eventsource-parser";
@@ -30,7 +31,7 @@ export default function AgentProcessPage() {
 
     const fetchStream = async () => {
       try {
-        const res = await fetch(`/api/reports/stream/${taskId}`, {
+        const res = await apiFetch(`/api/reports/stream/${taskId}`, {
           signal: abortController.signal
         });
         if (!res.ok) {
@@ -182,6 +183,25 @@ function EventRow({ event, isLast }: { event: AgentEvent, isLast: boolean }) {
         className="flex items-start gap-2 ml-11 text-xs text-stone-400 font-mono border-l-2 border-stone-200 pl-3 py-1 overflow-hidden"
       >
          <span className="truncate">{event.data.result_preview}</span>
+      </motion.div>
+    );
+  }
+
+  if (event.type === "thinking") {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: "auto" }}
+        className="flex items-start gap-2 ml-11 text-sm text-[#8c8c73] font-serif italic py-1"
+      >
+        <span className="mt-1 flex-shrink-0 animate-pulse text-[#5A5A40]">💡</span>
+        <motion.span 
+           initial={{ opacity: 0 }}
+           animate={{ opacity: 1 }}
+           transition={{ duration: 0.5 }}
+        >
+          {event.data.text || "正在整理思路..."}
+        </motion.span>
       </motion.div>
     );
   }

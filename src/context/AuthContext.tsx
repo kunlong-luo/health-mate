@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type User = { id: string; phone?: string; email?: string; email_verified?: number; name?: string; is_pro?: number; avatar_emoji?: string };
@@ -19,19 +20,19 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('hm_user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem('hm_token');
+  });
 
   useEffect(() => {
-    const savedToken = localStorage.getItem('hm_token');
-    const savedUser = localStorage.getItem('hm_user');
-    if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
-      
+    if (token && user) {
       // Fetch latest user data from server to check Pro status
-      fetch('/api/auth/me', {
-        headers: { Authorization: `Bearer ${savedToken}` }
+      apiFetch('/api/auth/me', {
+        headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => {
          if (res.status === 401) {
@@ -66,6 +67,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem('hm_token');
     localStorage.removeItem('hm_user');
   };
+
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      console.warn("Global 401 unauthorized intercepted. Logging out...");
+      logout();
+    };
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+  }, []);
 
   const updateUser = (newUser: User) => {
     setUser(newUser);

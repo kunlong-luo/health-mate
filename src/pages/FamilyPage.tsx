@@ -1,14 +1,17 @@
+import { apiFetch } from '../lib/api';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Users, Plus, UserCircle, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function FamilyPage() {
   const { token } = useAuth();
   const navigate = useNavigate();
   const [members, setMembers] = useState<any[]>([]);
   const [showAdd, setShowAdd] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [newMember, setNewMember] = useState({ name: '', gender: '男', birth_year: 1960 });
 
   useEffect(() => {
@@ -20,18 +23,23 @@ export default function FamilyPage() {
   }, [token]);
 
   const fetchMembers = async () => {
-    const res = await fetch('/api/family', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setMembers(data);
+    setIsLoading(true);
+    try {
+      const res = await apiFetch('/api/family', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMembers(data);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleAdd = async () => {
     if (!newMember.name) return toast.error('请输入称呼');
-    const res = await fetch('/api/family', {
+    const res = await apiFetch('/api/family', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -108,33 +116,55 @@ export default function FamilyPage() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {members.map(m => (
-          <Link to={`/family/${m.id}`} key={m.id} className="bg-white p-6 rounded-[24px] shadow-sm border border-[#e5e5dd] flex items-center justify-between hover:shadow-md hover:border-[#5a5a35]/40 transition-all duration-300 group">
-            <div className="flex items-center gap-5">
-              <div className="w-14 h-14 bg-[#f7f7f3] border border-[#e5e5dd] rounded-full flex items-center justify-center text-2xl shadow-sm">
-                {m.avatar_emoji || '👤'}
-              </div>
-              <div>
-                <h3 className="font-serif font-medium text-stone-800 text-xl tracking-tight mb-1">{m.name}</h3>
-                <div className="flex items-center gap-2 text-xs font-medium text-stone-400">
-                   <span className="bg-[#f7f7f3] px-2 py-0.5 rounded-full border border-[#e5e5dd]">{m.gender}</span>
-                   <span className="bg-[#f7f7f3] px-2 py-0.5 rounded-full border border-[#e5e5dd]">{m.birth_year}年</span>
+        {isLoading ? (
+          <>
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="bg-white p-6 rounded-[24px] shadow-sm border border-[#e5e5dd] flex items-center justify-between animate-pulse">
+                <div className="flex items-center gap-5">
+                  <div className="w-14 h-14 bg-stone-200 rounded-full flex-shrink-0"></div>
+                  <div className="space-y-3">
+                    <div className="h-5 w-24 bg-stone-200 rounded-md"></div>
+                    <div className="flex gap-2">
+                      <div className="h-4 w-8 bg-stone-100 rounded-full"></div>
+                      <div className="h-4 w-12 bg-stone-100 rounded-full"></div>
+                    </div>
+                  </div>
                 </div>
+                <div className="w-10 h-10 rounded-full bg-stone-100 flex-shrink-0"></div>
               </div>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-[#fdfdfa] border border-[#e5e5dd] flex items-center justify-center group-hover:bg-[#5a5a35] group-hover:bg-opacity-10 text-stone-300 group-hover:text-[#5a5a35] transition">
-              <ChevronRight size={20} />
-            </div>
-          </Link>
-        ))}
-        {members.length === 0 && !showAdd && (
-          <div className="col-span-full py-16 text-center text-stone-500 bg-[#fdfdfa] rounded-[32px] border border-dashed border-[#d6d3d1]">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-[#e5e5dd] shadow-sm">
-               <Users size={24} className="text-[#a8a86c]" />
-            </div>
-            <p className="font-medium text-stone-700">暂无家人档案</p>
-            <p className="text-sm mt-1">创建一份档案，开启家庭健康的数据化管理</p>
-          </div>
+            ))}
+          </>
+        ) : (
+          <>
+            {members.map(m => (
+              <Link to={`/family/${m.id}`} key={m.id} className="bg-white p-6 rounded-[24px] shadow-sm border border-[#e5e5dd] flex items-center justify-between hover:shadow-md hover:border-[#5a5a35]/40 transition-all duration-300 group">
+                <div className="flex items-center gap-5">
+                  <div className="w-14 h-14 bg-[#f7f7f3] border border-[#e5e5dd] rounded-full flex items-center justify-center text-2xl shadow-sm">
+                    {m.avatar_emoji || '👤'}
+                  </div>
+                  <div>
+                    <h3 className="font-serif font-medium text-stone-800 text-xl tracking-tight mb-1">{m.name}</h3>
+                    <div className="flex items-center gap-2 text-xs font-medium text-stone-400">
+                       <span className="bg-[#f7f7f3] px-2 py-0.5 rounded-full border border-[#e5e5dd]">{m.gender}</span>
+                       <span className="bg-[#f7f7f3] px-2 py-0.5 rounded-full border border-[#e5e5dd]">{m.birth_year}年</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-[#fdfdfa] border border-[#e5e5dd] flex items-center justify-center group-hover:bg-[#5a5a35] group-hover:bg-opacity-10 text-stone-300 group-hover:text-[#5a5a35] transition">
+                  <ChevronRight size={20} />
+                </div>
+              </Link>
+            ))}
+            {members.length === 0 && !showAdd && (
+              <div className="col-span-full py-16 text-center text-stone-500 bg-[#fdfdfa] rounded-[32px] border border-dashed border-[#d6d3d1]">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-[#e5e5dd] shadow-sm">
+                   <Users size={24} className="text-[#a8a86c]" />
+                </div>
+                <p className="font-medium text-stone-700">暂无家人档案</p>
+                <p className="text-sm mt-1">创建一份档案，开启家庭健康的数据化管理</p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

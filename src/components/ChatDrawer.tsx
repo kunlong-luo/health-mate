@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useState, useRef, useEffect } from "react";
 import { Drawer } from "vaul";
 import { MessageCircle, X, Send, Bot, User } from "lucide-react";
@@ -27,7 +28,7 @@ export default function ChatDrawer() {
     setLoading(true);
 
     try {
-        const res = await fetch('/api/chat/stream', {
+        const res = await apiFetch('/api/chat/stream', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify({ messages: newMessages })

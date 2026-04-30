@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -14,7 +15,7 @@ export default function VisitListPage() {
     queryFn: async () => {
       if (!token) return [];
       try {
-        const res = await fetch('/api/visits', { headers: { Authorization: `Bearer ${token}` } });
+        const res = await apiFetch('/api/visits', { headers: { Authorization: `Bearer ${token}` } });
         if (!res.ok) return [];
         const data = await res.json();
         return Array.isArray(data) ? data : [];

@@ -12,7 +12,7 @@ export default defineConfig(({mode}) => {
       react(), 
       tailwindcss(),
       VitePWA({
-        registerType: 'autoUpdate',
+        registerType: 'prompt',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'pinned-tab.svg'],
         manifest: {
           name: 'HealthMate - 家庭健康伴侣',
@@ -81,6 +81,7 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
+      watch: process.env.DISABLE_HMR === 'true' ? null : { ignored: ['**/data/**', '**/*.db*'] },
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',

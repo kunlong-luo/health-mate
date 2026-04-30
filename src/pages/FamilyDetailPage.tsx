@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -26,7 +27,7 @@ export default function FamilyDetailPage() {
   }, [id, token]);
 
   const fetchDetail = async () => {
-    const res = await fetch(`/api/family/${id}`, {
+    const res = await apiFetch(`/api/family/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (res.ok) {
@@ -36,7 +37,7 @@ export default function FamilyDetailPage() {
 
   const fetchTrend = async (indicator: string) => {
     setSelectedIndicator(indicator);
-    const res = await fetch(`/api/family/${id}/trends/${indicator}`, {
+    const res = await apiFetch(`/api/family/${id}/trends/${indicator}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (res.ok) {

@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Check, ShieldCheck, Sparkles, Server, Zap } from "lucide-react";
@@ -21,7 +22,7 @@ export default function PricingPage() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/upgrade', {
+      const res = await apiFetch('/api/auth/upgrade', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });

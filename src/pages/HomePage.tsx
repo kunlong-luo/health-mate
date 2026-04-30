@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useState, useEffect } from "react";
 import { AlertCircle, FileText } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
@@ -11,23 +12,28 @@ export default function HomePage() {
   const { token } = useAuth();
   const [members, setMembers] = useState<any[]>([]);
   const [selectedMemberId, setSelectedMemberId] = useState<string>('');
+  const [isLoadingMembers, setIsLoadingMembers] = useState(true);
   const { t } = useTranslation();
 
   useEffect(() => {
     if (token) {
-      fetch('/api/family', { headers: { Authorization: `Bearer ${token}` } })
+      setIsLoadingMembers(true);
+      apiFetch('/api/family', { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data)) {
             setMembers(data);
             if (data.length > 0) setSelectedMemberId(data[0].id);
           }
-        });
+        })
+        .finally(() => setIsLoadingMembers(false));
+    } else {
+      setIsLoadingMembers(false);
     }
   }, [token]);
 
   return (
-    <div className="flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="flex flex-col gap-8">
       <CareReminders />
 
       <div className="text-center space-y-4 mt-8 mb-6">
@@ -43,6 +49,7 @@ export default function HomePage() {
          members={members} 
          selectedMemberId={selectedMemberId} 
          onSelectMember={setSelectedMemberId} 
+         isLoadingMembers={isLoadingMembers}
       />
       
       <div className="grid sm:grid-cols-2 gap-4">

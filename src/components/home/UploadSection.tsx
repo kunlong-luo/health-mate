@@ -1,3 +1,4 @@
+import { apiFetch } from '../../lib/api';
 import { useCallback, useState, memo } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +7,7 @@ import { toast } from "sonner";
 import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 
-export const UploadSection = memo(function UploadSection({ members, selectedMemberId, onSelectMember }: { members: any[], selectedMemberId: string, onSelectMember: (id: string) => void }) {
+export const UploadSection = memo(function UploadSection({ members, selectedMemberId, onSelectMember, isLoadingMembers }: { members: any[], selectedMemberId: string, onSelectMember: (id: string) => void, isLoadingMembers?: boolean }) {
   const navigate = useNavigate();
   const { token } = useAuth();
   const [isUploading, setIsUploading] = useState(false);
@@ -49,19 +50,11 @@ export const UploadSection = memo(function UploadSection({ members, selectedMemb
     formData.append("family_member_id", selectedMemberId);
 
     try {
-      const res = await fetch("/api/reports/upload", {
+      const res = await apiFetch("/api/reports/upload", {
         method: "POST",
         body: formData,
-        headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json().catch(() => ({}));
-      
-      if (res.status === 401) {
-        toast.error("Session expired");
-        localStorage.removeItem('healthmate_token');
-        window.location.href = '/login';
-        return;
-      }
       
       if (!res.ok) throw new Error(data.error || "Upload failed");
       navigate(`/process/${data.task_id}`);
@@ -95,7 +88,7 @@ export const UploadSection = memo(function UploadSection({ members, selectedMemb
           </div>
         </div>
         
-        {token && members.length > 0 && (
+        {token && !isLoadingMembers && members.length > 0 && (
            <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm z-10 w-full md:w-auto">
              <select 
                value={selectedMemberId} 
@@ -124,6 +117,10 @@ export const UploadSection = memo(function UploadSection({ members, selectedMemb
             <Loader2 className="w-12 h-12 animate-spin" />
             <div className="text-xl font-serif font-medium">{t('upload.interpreting')}</div>
             <p className="text-sm text-stone-500">{t('upload.interpretingDesc')}</p>
+          </div>
+        ) : isLoadingMembers ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-[#d5d5c5]" />
           </div>
         ) : (
           <div className="flex flex-col items-center max-w-md mx-auto">

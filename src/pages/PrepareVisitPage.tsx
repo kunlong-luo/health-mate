@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -18,7 +19,7 @@ export default function PrepareVisitPage() {
     queryKey: ['family'],
     queryFn: async () => {
       if (!token) return [];
-      const res = await fetch('/api/family', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await apiFetch('/api/family', { headers: { Authorization: `Bearer ${token}` } });
       return res.json();
     },
     enabled: !!token
@@ -28,7 +29,7 @@ export default function PrepareVisitPage() {
     if (!memberId || !complaint) return toast.error("请选择家人并填写就诊原因");
     setLoading(true);
     try {
-       const res = await fetch('/api/chat/stream', {
+       const res = await apiFetch('/api/chat/stream', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
          body: JSON.stringify({
@@ -60,7 +61,7 @@ export default function PrepareVisitPage() {
   const handleSaveAppt = async () => {
     if (!token) return;
     try {
-      const res = await fetch('/api/visits', {
+      const res = await apiFetch('/api/visits', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({

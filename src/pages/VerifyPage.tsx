@@ -1,3 +1,4 @@
+import { apiFetch } from '../lib/api';
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -28,7 +29,7 @@ export default function VerifyPage() {
 
     const verifyToken = async () => {
       try {
-        const res = await fetch('/api/auth/magic-link/verify', {
+        const res = await apiFetch('/api/auth/magic-link/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token, purpose, email }),
