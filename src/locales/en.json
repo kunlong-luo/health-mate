@@ -165,7 +165,7 @@
   "home": {
     "title": "Family Medical Report",
     "subtitle": "AI Interpretation",
-    "desc": "Capture your parents' medical reports, quickly understand key indicators. Not just translation, but your exclusive family medical assistant.",
+    "desc": "Capture your parents' medical reports, quickly understand key indicators.\nNot just translation, but your exclusive family medical assistant.",
     "alerts": {
       "title": "Proactive Alerts",
       "desc": "The system automatically notifies you of abnormal data changes, upcoming follow-ups, or when medications run out."

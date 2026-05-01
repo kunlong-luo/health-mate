@@ -8,7 +8,7 @@
 
 ---
 
-<img width="2560" height="1600" alt="Screenshot_20260430_191941" src="https://github.com/user-attachments/assets/4508371c-70f3-4462-8e0b-ee161f0a8075" />
+![Homepage Screenshot](./docs/screenshot.png)
 
 ## 🌟 HealthMate - Proactive Family Health AI Assistant
 

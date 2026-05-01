@@ -35,7 +35,7 @@ export default function VisitListPage() {
           <Activity className="text-[#5A5A40]" /> {t('visitList.title')}
         </h2>
         <Link to="/visits/prepare" className="px-4 py-2 bg-[#5A5A40] text-white rounded-full text-sm font-medium flex items-center gap-1 shadow-sm">
-          <Plus size={16} /> {t('visitList.prepareBtn')}
+          <Plus size={16} /> {t('visitList.prepare')}
         </Link>
       </div>
 
@@ -44,7 +44,7 @@ export default function VisitListPage() {
       ) : visits.length === 0 ? (
          <div className="text-center py-20 bg-white rounded-3xl border border-stone-100 shadow-sm">
            <Activity size={48} className="mx-auto text-stone-200 mb-4" />
-           <p className="text-stone-500 font-medium">{t('visitList.noVisits')}</p>
+           <p className="text-stone-500 font-medium">{t('visitList.noTasks')}</p>
          </div>
       ) : (
          <div className="space-y-4">

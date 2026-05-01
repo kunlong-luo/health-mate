@@ -208,7 +208,12 @@ try { db.exec('ALTER TABLE users ADD COLUMN is_pro INTEGER DEFAULT 0;'); } catch
 // Performance indices
 try { db.exec('CREATE INDEX IF NOT EXISTS idx_reports_family ON reports(family_member_id);'); } catch (e) {}
 try { db.exec('CREATE INDEX IF NOT EXISTS idx_indicators_family ON indicators(family_member_id);'); } catch (e) {}
+try { db.exec('CREATE INDEX IF NOT EXISTS idx_indicators_report ON indicators(report_id);'); } catch (e) {}
 try { db.exec('CREATE INDEX IF NOT EXISTS idx_medications_family ON medications(family_member_id);'); } catch (e) {}
 try { db.exec('CREATE INDEX IF NOT EXISTS idx_family_members_user ON family_members(user_id);'); } catch (e) {}
+try { db.exec('CREATE INDEX IF NOT EXISTS idx_notes_family ON notes(family_member_id);'); } catch (e) {}
+try { db.exec('CREATE INDEX IF NOT EXISTS idx_notes_user ON notes(user_id);'); } catch (e) {}
+try { db.exec('CREATE INDEX IF NOT EXISTS idx_visits_family ON visits(family_member_id);'); } catch (e) {}
+try { db.exec('CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);'); } catch (e) {}
 
 

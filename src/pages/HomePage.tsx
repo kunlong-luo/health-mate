@@ -40,7 +40,7 @@ export default function HomePage() {
         <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-medium text-[#292524] tracking-tight leading-tight">
           {t('home.title')}<br className="md:hidden" /><span className="italic text-[#5a5a35]">{t('home.subtitle')}</span>
         </h1>
-        <p className="text-stone-500 text-sm md:text-base max-w-md mx-auto leading-relaxed">
+        <p className="text-stone-500 text-sm md:text-base max-w-md mx-auto leading-relaxed whitespace-pre-line">
           {t('home.desc')}
         </p>
       </div>

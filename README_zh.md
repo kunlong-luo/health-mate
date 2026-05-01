@@ -8,7 +8,7 @@
 
 ---
 
-<img width="2560" height="1600" alt="screenshot" src="https://github.com/user-attachments/assets/1b28e3dc-e171-4a30-befb-02f18ac31d67" />
+![首页截图 - Homepage](./docs/screenshot.png)
 
 ## 🌟 中文说明 (HealthMate)
 
